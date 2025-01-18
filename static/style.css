@@ -484,3 +484,71 @@ pre code {
     margin-top: 2rem;
     line-height: 1.8;
 }
+
+/* 首页样式 */
+.home-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: var(--title-color);
+    margin-bottom: 2rem;
+    font-weight: normal;
+}
+
+.welcome-text {
+    text-align: left;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+}
+
+.feature-list li {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.blog-description {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(66, 185, 131, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid var(--link-color);
+}
+
+.quick-links {
+    margin-top: 3rem;
+}
+
+.quick-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.quick-links li {
+    margin: 0.8rem 0;
+}
+
+.quick-links a {
+    color: var(--link-color);
+    text-decoration: none;
+    margin-left: 0.5rem;
+}
+
+.quick-links a:hover {
+    text-decoration: underline;
+}
