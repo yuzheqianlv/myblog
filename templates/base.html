@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="{{ config.extra.author }}">
+    <meta name="description" content="{{ config.description }}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ get_url(path='favicon.ico') | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path='style.css') | safe }}">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile">
+                <div class="avatar"></div>
+                <h1 class="site-title">{{ config.title }}</h1>
+                <p class="site-description">{{ config.description }}</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="{{ config.base_url }}">首页</a></li>
+                    <li><a href="{{ get_url(path='blog') }}">文章</a></li>
+                    <li><a href="{{ get_url(path='gallery') }}">图库</a></li>
+                    <li><a href="{{ get_url(path='about') }}">关于</a></li>
+                    <li><a href="{{ get_url(path='friends') }}">友链</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            {% block content %} {% endblock %}
+        </main>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}标签 - {{ config.title }}{% endblock title %}
+
+{% block content %}
+<div class="page-content">
+    <h1 class="page-title">标签</h1>
+    <div class="tags-list">
+        {% for term in terms %}
+        <div class="tag-item">
+            <a href="{{ term.permalink }}" class="tag-link">
+                #{{ term.name }}
+                <span class="tag-count">({{ term.pages | length }})</span>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %} 

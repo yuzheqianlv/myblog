@@ -1,0 +1,16 @@
+base_url = "/"
+title = "千虑者"
+description = "(✿╹◡╹) 智者千虑必有一失,愚者千虑必有一得(╹◡╹✿)"
+default_language = "zh"
+
+# 添加分类支持
+taxonomies = [
+    {name = "tags", feed = true}, # 标签分类
+]
+
+[markdown]
+highlight_code = true
+highlight_theme = "base16-ocean-light"
+
+[extra]
+author = "垚" 

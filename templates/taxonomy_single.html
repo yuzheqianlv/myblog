@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}#{{ term.name }} - {{ config.title }}{% endblock title %}
+
+{% block content %}
+<div class="page-content">
+    <h1 class="page-title">#{{ term.name }}</h1>
+    <div class="post-list">
+        {% for page in term.pages %}
+        <article class="post-item">
+            <h2 class="post-title">
+                <a href="{{ page.permalink }}">{{ page.title }}</a>
+            </h2>
+            <div class="post-meta">
+                <time>{{ page.date | date(format="%Y-%m-%d") }}</time>
+            </div>
+            {% if page.description %}
+            <div class="post-description">
+                {{ page.description }}
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %} 

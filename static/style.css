@@ -1,0 +1,486 @@
+:root {
+    --bg-color: #fff;
+    --text-color: rgba(0, 0, 0, 0.5);
+    --title-color: rgba(0, 0, 0, 0.85);
+    --border-color: #eaeaea;
+    --sidebar-width: 280px;
+    --link-color: #42b983;
+}
+
+html {
+    background-color: var(--bg-color);
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "PingHei", "PingFang SC", "Helvetica Neue", "Work Sans", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
+    font-size: 15px;
+    color: var(--text-color);
+    line-height: 1.6;
+    background-color: var(--bg-color);
+}
+
+.container {
+    position: relative;
+    min-height: 100vh;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-color);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    border: 1px solid var(--border-color);
+    padding: 2px;
+    background-image: url('../shaonv.jpeg');
+    background-size: 230%;
+    background-position: 70% 45%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    animation: avatarIn 0.8s ease-out;
+    transform: rotate(0deg);
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* 头像悬停效果 */
+.avatar:hover {
+    transform: rotate(360deg);
+    border-color: var(--link-color);
+    box-shadow: 0 0 10px rgba(66, 185, 131, 0.3);
+}
+
+/* 保持页面加载动画 */
+@keyframes avatarIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.site-title {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    color: var(--title-color);
+    font-weight: normal;
+}
+
+.site-description {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin: 0.5rem 0;
+}
+
+/* 导航菜单 */
+.nav {
+    width: 100%;
+}
+
+.nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+.nav li {
+    margin: 0.3rem 0;
+    text-align: center;
+}
+
+.nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+    padding: 0.2rem 1rem;
+    display: inline-block;
+}
+
+.nav a:hover {
+    color: var(--link-color);
+}
+
+/* 内容区域 */
+.content {
+    margin-left: var(--sidebar-width);
+    padding: 40px;
+    width: calc(100% - var(--sidebar-width));
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+/* 博客列表样式 */
+.blog-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.blog-item {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.blog-title {
+    margin: 0 0 1rem;
+}
+
+.blog-title a {
+    color: var(--title-color);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+
+.blog-title a:hover {
+    color: var(--link-color);
+}
+
+.blog-meta {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.blog-description {
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+} 
+
+/* 页面通用样式 */
+.page-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: var(--title-color);
+    margin-bottom: 2rem;
+    font-weight: normal;
+}
+
+.page-body {
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+/* 文章列表样式 */
+.post-item {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-title {
+    margin: 0 0 1rem;
+}
+
+.post-title a {
+    color: var(--title-color);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+
+.post-title a:hover {
+    color: var(--link-color);
+}
+
+.post-meta {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.post-tags {
+    margin-left: 1rem;
+}
+
+.post-tags a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-right: 0.5rem;
+}
+
+.post-tags a:hover {
+    color: var(--link-color);
+}
+
+.post-description {
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+/* 文章页面样式 */
+.post {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.post-title {
+    font-size: 2rem;
+    color: var(--title-color);
+    margin-bottom: 1rem;
+    font-weight: normal;
+}
+
+.post-meta {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.post-content {
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+.post-content p {
+    margin: 1.5em 0;
+}
+
+/* 文章列表样式优化 */
+.post-list {
+    margin-top: 2rem;
+}
+
+.post-item {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-item:last-child {
+    border-bottom: none;
+}
+
+/* 标签样式 */
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.tag-item {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tag-link {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border-radius: 1.5rem;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.tag-link:hover {
+    color: var(--link-color);
+    border-color: var(--link-color);
+    background-color: rgba(66, 185, 131, 0.1);
+}
+
+.tag-count {
+    font-size: 0.9em;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* 文章中的标签样式 */
+.post-tags {
+    margin-top: 0.5rem;
+}
+
+.post-tags a {
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    margin-right: 0.5rem;
+    border-radius: 1rem;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.post-tags a:hover {
+    color: var(--link-color);
+    border-color: var(--link-color);
+    background-color: rgba(66, 185, 131, 0.1);
+}
+
+/* 代码块样式 */
+pre {
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow: auto;
+    font-size: 0.9em;
+    line-height: 1.45;
+    margin: 1.5em 0;
+}
+
+/* 行内代码样式 */
+code {
+    background-color: rgba(175, 184, 193, 0.2);
+    border-radius: 3px;
+    padding: 0.2em 0.4em;
+    font-size: 0.9em;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+}
+
+/* 代码块中的代码不需要背景色和内边距 */
+pre code {
+    background: none;
+    padding: 0;
+    font-size: 1em;
+}
+
+/* 代码语言标签 */
+.code-header {
+    background: #e1e4e8;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.85em;
+    color: #24292e;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+}
+
+/* 带语言标签的代码块容器 */
+.code-container {
+    margin: 1.5em 0;
+}
+
+.code-container pre {
+    margin: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* 图库样式 */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+}
+
+.gallery-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: white;
+}
+
+.gallery-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.gallery-description {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* 单个图片页面样式 */
+.gallery-post {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.gallery-image {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.gallery-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-content {
+    margin-top: 2rem;
+    line-height: 1.8;
+}

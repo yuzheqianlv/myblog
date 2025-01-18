@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-content">
+    <h1 class="page-title">{{ section.title }}</h1>
+    <div class="gallery-grid">
+        {% for page in section.pages %}
+        <div class="gallery-item">
+            <a href="{{ page.permalink }}" class="gallery-link">
+                <img src="{{ get_url(path=page.extra.image) | safe }}" alt="{{ page.title }}" loading="lazy">
+                <div class="gallery-info">
+                    <h3 class="gallery-title">{{ page.title }}</h3>
+                    {% if page.description %}
+                    <p class="gallery-description">{{ page.description }}</p>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %} 
