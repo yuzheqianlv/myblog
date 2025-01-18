@@ -38,15 +38,17 @@ body {
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding: 20px 20px;
+    padding: 20px;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .profile {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
 }
 
 .avatar {
@@ -103,26 +105,26 @@ body {
 /* 导航菜单 */
 .nav {
     width: 100%;
+    text-align: center;
 }
 
 .nav ul {
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0;
+    margin: 0;
 }
 
 .nav li {
-    margin: 0.3rem 0;
-    text-align: center;
+    margin: 1rem 0;
 }
 
 .nav a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
     color: var(--text-color);
     text-decoration: none;
-    font-size: 0.95rem;
     transition: color 0.3s;
-    padding: 0.2rem 1rem;
-    display: inline-block;
+    font-size: 0.95rem;
 }
 
 .nav a:hover {
@@ -179,15 +181,21 @@ body {
 /* 响应式设计 */
 @media screen and (max-width: 768px) {
     .sidebar {
-        display: none;
+        position: static;
+        width: 100%;
+        padding: 1rem;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
     }
     
-    .content {
-        margin-left: 0;
-        width: 100%;
-        padding: 20px;
+    .profile {
+        margin-bottom: 1rem;
     }
-} 
+    
+    .nav li {
+        margin: 0.5rem 0;
+    }
+}
 
 /* 页面通用样式 */
 .page-content {

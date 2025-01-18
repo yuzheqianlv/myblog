@@ -6,6 +6,8 @@ use std::path::{Path, PathBuf};
 use std::env;
 use std::fmt;
 use std::error::Error;
+use regex::Regex;
+mod web;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -38,6 +40,11 @@ enum Commands {
         /// 文章路径，不指定则修复所有文章
         #[arg(short, long)]
         path: Option<PathBuf>,
+    },
+    /// 启动Web编辑器服务器
+    Serve {
+        #[arg(short, long, default_value = "3001")]
+        port: u16,
     },
 }
 
@@ -97,18 +104,25 @@ impl PostError {
     }
 }
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
-    match &cli.command {
+    match cli.command {
         Commands::New { title, description, tags } => {
-            create_new_post(title, description.as_deref(), tags.as_ref())?;
+            create_new_post(&title, description.as_deref(), tags.as_ref())?;
         }
         Commands::Check { path } => {
             check_posts(path.as_ref().map(|p| p.as_path()))?;
         }
         Commands::Fix { path } => {
             fix_posts(path.as_ref().map(|p| p.as_path()))?;
+        }
+        Commands::Serve { port } => {
+            println!("🚀 启动Web编辑器服务器...");
+            println!("📝 编辑器地址: http://localhost:{}", port);
+            println!("�� 按 Ctrl+C 停止服务器");
+            web::start_server(port).await?;
         }
     }
 
@@ -316,6 +330,13 @@ fn check_date_format(content: &str) -> Result<()> {
     if !content.contains("date = ") {
         return Err(PostError::MissingDate.into());
     }
+
+    // 使用正则表达式匹配日期格式
+    let date_regex = Regex::new(r#"date\s*=\s*"?\d{4}-\d{2}-\d{2}"?"#).unwrap();
+    if !date_regex.is_match(content) {
+        return Err(PostError::InvalidDateFormat.into());
+    }
+
     Ok(())
 }
 

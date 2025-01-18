@@ -9,8 +9,20 @@ taxonomies = [
 ]
 
 [markdown]
+# 启用自定义 HTML
+render_emoji = true
+external_links_target_blank = true
+external_links_no_follow = true
+smart_punctuation = true
 highlight_code = true
-highlight_theme = "base16-ocean-light"
+highlight_theme = "base16-ocean-dark"
 
 [extra]
-author = "千虑者" 
+author = "千虑者"
+# 添加自定义配置
+enable_line_numbers = true 
+
+[[extra.search]]
+name = "search"
+template = "search-results.html"
+path = "search" 

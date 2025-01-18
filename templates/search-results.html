@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}搜索结果 - {{ config.title }}{% endblock title %}
+
+{% block content %}
+<div class="search-results-page">
+    <h1 class="page-title">搜索结果</h1>
+    <div id="search-results"></div>
+</div>
+
+<style>
+    .search-results-page {
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        margin-left: 300px;
+    }
+
+    @media (max-width: 768px) {
+        .search-results-page {
+            margin-left: 0;
+            padding: 1rem;
+        }
+    }
+
+    .page-title {
+        margin-bottom: 2rem;
+        color: var(--primary-color);
+    }
+
+    .result-item {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .result-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .result-title {
+        margin: 0;
+        font-size: 1.25rem;
+    }
+
+    .result-title a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .result-title a:hover {
+        color: var(--secondary-color);
+    }
+
+    .result-score {
+        font-size: 0.875rem;
+        color: var(--secondary-color);
+        background: var(--hover-color);
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+    }
+
+    .result-excerpt {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--text-color);
+        margin: 1rem 0;
+    }
+
+    .result-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .result-tag {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        background: var(--hover-color);
+        color: var(--secondary-color);
+        border-radius: 999px;
+    }
+
+    .line-reference {
+        font-family: monospace;
+        color: var(--secondary-color);
+        font-size: 0.875rem;
+    }
+
+    mark {
+        background-color: var(--mark-color);
+        padding: 0.1em 0.2em;
+        border-radius: 2px;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: var(--secondary-color);
+    }
+
+    .search-error {
+        padding: 1rem;
+        margin: 1rem 0;
+        background: #fff5f5;
+        border-radius: 4px;
+        color: #e53e3e;
+    }
+</style>
+
+<script>
+    async function searchPosts() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        if (!query) {
+            showNoResults('请输入搜索关键词');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/search?q=${encodeURIComponent(query)}`);
+            if (!response.ok) {
+                throw new Error(`搜索请求失败: ${response.status}`);
+            }
+            
+            const results = await response.json();
+            displaySearchResults(results);
+        } catch (error) {
+            console.error('搜索失败:', error);
+            showError(error.message);
+        }
+    }
+
+    function displaySearchResults(results) {
+        const container = document.getElementById('search-results');
+        
+        if (!results || results.length === 0) {
+            showNoResults('未找到相关文章');
+            return;
+        }
+
+        container.innerHTML = results.map(result => `
+            <article class="result-item">
+                <div class="result-header">
+                    <h2 class="result-title">
+                        <a href="${result.path}#${result.anchor}">${result.title}</a>
+                    </h2>
+                    <span class="result-score">相关度 ${Math.round(result.score)}%</span>
+                </div>
+                <div class="result-excerpt">${result.excerpt}</div>
+                <div class="result-tags">
+                    ${result.tags.map(tag => `
+                        <span class="result-tag">${tag}</span>
+                    `).join('')}
+                </div>
+            </article>
+        `).join('');
+    }
+
+    function showNoResults(message) {
+        document.getElementById('search-results').innerHTML = `
+            <div class="no-results">
+                <p>${message}</p>
+            </div>
+        `;
+    }
+
+    function showError(message) {
+        document.getElementById('search-results').innerHTML = `
+            <div class="search-error">
+                <strong>搜索出错:</strong> ${message}
+            </div>
+        `;
+    }
+
+    // 页面加载时执行搜索
+    window.addEventListener('DOMContentLoaded', searchPosts);
+</script>
+{% endblock content %} 

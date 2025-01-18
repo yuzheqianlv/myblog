@@ -1,0 +1,8 @@
+{%- set lines = body | split(pat="\n") -%}
+{%- for line in lines -%}
+    {%- if line | trim != "" -%}
+        <div id="L{{ loop.index }}" class="line">{{ line | safe }}</div>
+    {%- else -%}
+        <div class="line-empty"></div>
+    {%- endif -%}
+{%- endfor -%} 

@@ -4,12 +4,102 @@
 
 {% block content %}
 <article class="post">
-    <h1 class="post-title">{{ page.title }}</h1>
+    <h1 class="title">{{ page.title }}</h1>
+    
+    {% if page.date %}
     <div class="post-meta">
         <time>{{ page.date | date(format="%Y-%m-%d") }}</time>
     </div>
-    <div class="post-content">
+    {% endif %}
+
+    <div class="content">
         {{ page.content | safe }}
     </div>
+
+    {% if page.taxonomies.tags %}
+    <div class="tags">
+        {% for tag in page.taxonomies.tags %}
+        <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}" class="tag">{{ tag }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
 </article>
+
+<style>
+    .line {
+        position: relative;
+        padding: 0.25rem 0;
+        scroll-margin-top: 2rem;  /* 调整滚动边距 */
+        scroll-margin-left: 300px;  /* 为侧边栏添加边距 */
+    }
+
+    .line:target {
+        background-color: #fefcbf;
+        border-radius: 4px;
+        margin-left: -1rem;  /* 让高亮效果延伸到左边 */
+        margin-right: -1rem;  /* 让高亮效果延伸到右边 */
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .line-empty {
+        height: 1rem;
+    }
+
+    /* 添加行号悬停效果 */
+    .line::before {
+        content: attr(id);
+        position: absolute;
+        left: -3rem;
+        width: 2.5rem;
+        color: #a0aec0;
+        font-size: 0.75rem;
+        font-family: monospace;
+        text-align: right;
+        user-select: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .line:hover::before {
+        opacity: 1;
+    }
+
+    /* 调整内容区域的样式 */
+    .content {
+        margin-left: 300px;  /* 与侧边栏宽度一致 */
+        padding: 2rem;
+        position: relative;
+        scroll-padding-left: 300px;  /* 添加滚动内边距 */
+    }
+
+    @media (max-width: 768px) {
+        .content {
+            margin-left: 0;
+            padding: 1rem;
+            scroll-padding-left: 0;
+        }
+        .line:target {
+            margin-left: -0.5rem;
+            margin-right: -0.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+    }
+</style>
+
+<script>
+    // 处理锚点跳转
+    if (window.location.hash) {
+        const targetLine = document.querySelector(window.location.hash);
+        if (targetLine) {
+            // 等待页面完全加载后再滚动
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    targetLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            });
+        }
+    }
+</script>
 {% endblock content %} 
