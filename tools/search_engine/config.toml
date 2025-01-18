@@ -1,0 +1,9 @@
+# 搜索引擎配置
+index_path = "search_index"
+content_path = "../../content/blog"
+
+[indexing]
+# 分词器配置
+use_jieba = true
+# 是否索引标签
+index_tags = true 
