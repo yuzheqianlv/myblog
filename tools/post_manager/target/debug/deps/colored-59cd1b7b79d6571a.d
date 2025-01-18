@@ -1,0 +1,12 @@
+/Users/yuzhe/rust/myblog/tools/post_manager/target/debug/deps/libcolored-59cd1b7b79d6571a.rmeta: /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/lib.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/color.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/control.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/error.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/style.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/customcolors.rs
+
+/Users/yuzhe/rust/myblog/tools/post_manager/target/debug/deps/libcolored-59cd1b7b79d6571a.rlib: /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/lib.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/color.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/control.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/error.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/style.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/customcolors.rs
+
+/Users/yuzhe/rust/myblog/tools/post_manager/target/debug/deps/colored-59cd1b7b79d6571a.d: /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/lib.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/color.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/control.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/error.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/style.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/customcolors.rs
+
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/lib.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/color.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/control.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/error.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/style.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.2.0/src/customcolors.rs:

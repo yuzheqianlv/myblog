@@ -1,0 +1,12 @@
+/Users/yuzhe/rust/myblog/tools/post_manager/target/debug/deps/libanstyle-d769641f0fa35cd9.rmeta: /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/lib.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/macros.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/color.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/effect.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/reset.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/style.rs
+
+/Users/yuzhe/rust/myblog/tools/post_manager/target/debug/deps/libanstyle-d769641f0fa35cd9.rlib: /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/lib.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/macros.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/color.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/effect.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/reset.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/style.rs
+
+/Users/yuzhe/rust/myblog/tools/post_manager/target/debug/deps/anstyle-d769641f0fa35cd9.d: /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/lib.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/macros.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/color.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/effect.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/reset.rs /Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/style.rs
+
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/lib.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/macros.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/color.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/effect.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/reset.rs:
+/Users/yuzhe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/anstyle-1.0.10/src/style.rs:
