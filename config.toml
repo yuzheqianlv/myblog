@@ -36,14 +36,3 @@ sitemap_filename = "sitemap.xml"
 
 # 添加自定义配置
 enable_line_numbers = true 
-
-[extra.search]
-name = "search"
-template = "search-results.html"
-path = "search"
-# 搜索API端点配置
-api_endpoint = "/search"
-# 每页结果数
-results_per_page = 10
-# 搜索结果页面路径
-search_path = "search" 
