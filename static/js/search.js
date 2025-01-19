@@ -3,7 +3,8 @@ async function searchPosts() {
     if (!query) return;
 
     try {
-        const response = await fetch(`http://localhost:3000/api/search?q=${encodeURIComponent(query)}`);
+        const searchEndpoint = 'https://blog-search.example.com/api/search';
+        const response = await fetch(`${searchEndpoint}?q=${encodeURIComponent(query)}`);
         if (!response.ok) {
             throw new Error(`搜索请求失败: ${response.status}`);
         }

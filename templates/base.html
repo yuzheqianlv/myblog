@@ -4,39 +4,223 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO Meta Tags -->
+    <title>{% block title %}{{ config.title }}{% endblock title %} - {{ config.extra.subtitle }}</title>
     <meta name="author" content="{{ config.extra.author }}">
-    <meta name="description" content="{{ config.description }}">
+    <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
+    <meta name="keywords" content="{% block keywords %}{{ config.extra.keywords }}{% endblock keywords %}">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Mobile Meta -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta name="renderer" content="webkit">
-    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ current_url | safe }}">
+    <meta property="og:title" content="{% block og_title %}{{ config.title }}{% endblock og_title %}">
+    <meta property="og:description" content="{% block og_description %}{{ config.description }}{% endblock og_description %}">
+    <meta property="og:image" content="{{ get_url(path='shaonv.jpeg') | safe }}">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ current_url | safe }}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ config.title }}{% endblock twitter_title %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ config.description }}{% endblock twitter_description %}">
+    <meta name="twitter:image" content="{{ get_url(path='shaonv.jpeg') | safe }}">
+    
+    <!-- Verification -->
+    {% if config.extra.seo.google_site_verification %}
+    <meta name="google-site-verification" content="{{ config.extra.seo.google_site_verification }}">
+    {% endif %}
+    {% if config.extra.seo.baidu_site_verification %}
+    <meta name="baidu-site-verification" content="{{ config.extra.seo.baidu_site_verification }}">
+    {% endif %}
+    {% if config.extra.seo.bing_site_verification %}
+    <meta name="msvalidate.01" content="{{ config.extra.seo.bing_site_verification }}">
+    {% endif %}
+    
+    <!-- Links -->
     <link rel="icon" type="image/x-icon" href="{{ get_url(path='favicon.ico') | safe }}">
     <link rel="stylesheet" href="{{ get_url(path='style.css') | safe }}">
+    <link rel="canonical" href="{{ current_url | safe }}">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="{{ get_url(path='rss.xml') | safe }}">
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="profile">
-                <div class="avatar"></div>
-                <h1 class="site-title">{{ config.title }}</h1>
-                <p class="site-description">{{ config.description }}</p>
+            <div class="sidebar-content">
+                <div class="profile">
+                    <div class="avatar">
+                        <img src="{{ get_url(path='shaonv.jpeg') | safe }}" alt="{{ config.title }}">
+                    </div>
+                    <h1 class="site-title">{{ config.title }}</h1>
+                    <p class="site-description">{{ config.description }}</p>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="{{ config.base_url }}">首页</a></li>
+                        <li><a href="{{ get_url(path='blog') }}">文章</a></li>
+                        <li><a href="{{ get_url(path='gallery') }}">图库</a></li>
+                        <li><a href="{{ get_url(path='tags') }}">标签</a></li>
+                        <li><a href="{{ get_url(path='about') }}">关于</a></li>
+                        <li><a href="{{ get_url(path='friends') }}">友链</a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav class="nav">
-                <ul>
-                    <li><a href="{{ config.base_url }}">首页</a></li>
-                    <li><a href="{{ get_url(path='blog') }}">文章</a></li>
-                    <li><a href="{{ get_url(path='gallery') }}">图库</a></li>
-                    <li><a href="{{ get_url(path='about') }}">关于</a></li>
-                    <li><a href="{{ get_url(path='friends') }}">友链</a></li>
-                    <li><a href="http://localhost:3000" target="_blank">搜索</a></li>
-                </ul>
-            </nav>
         </aside>
 
         <main class="content">
             {% block content %} {% endblock %}
         </main>
     </div>
+
+<style>
+/* 容器样式 */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    position: fixed;
+    width: 280px;
+    height: 100vh;
+    background: var(--bg-color);
+    border-right: 1px solid var(--border-color);
+    padding: 2rem;
+    overflow-y: auto;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    
+    /* 添加弹性布局实现居中 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 调整内容容器样式 */
+.sidebar-content {
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    /* 添加弹性布局 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.sidebar-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* 调整 profile 样式 */
+.profile {
+    text-align: center;
+    width: 100%;
+    margin: 0; /* 移除底部边距 */
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--border-color);
+    background: var(--bg-color);
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% center;
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+.avatar:hover img {
+    transform: scale(1.15);
+}
+
+.site-title {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
+    color: var(--text-color);
+}
+
+.site-description {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* 导航样式 */
+.nav {
+    width: 100%;
+}
+
+.nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav li {
+    margin-bottom: 0.25rem;
+}
+
+.nav a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.nav a:hover {
+    background: var(--hover-color);
+    transform: translateX(4px);
+}
+
+/* 主内容区域样式 */
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .content {
+        margin-left: 0;
+    }
+}
+</style>
 </body>
 </html> 

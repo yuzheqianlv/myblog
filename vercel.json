@@ -1,6 +1,17 @@
 {
-    "buildCommand": "curl -sL https://github.com/getzola/zola/releases/download/v0.17.2/zola-v0.17.2-x86_64-unknown-linux-gnu.tar.gz | tar xz && ./zola build",
+    "buildCommand": "bash build.sh",
     "outputDirectory": "public",
-    "installCommand": "echo 'Nothing to install'",
-    "framework": null
+    "installCommand": "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source $HOME/.cargo/env",
+    "framework": null,
+    "routes": [
+        {
+            "src": "/api/search",
+            "dest": "/api/search"
+        }
+    ],
+    "functions": {
+        "api/search": {
+            "runtime": "vercel-rust@4.0.0"
+        }
+    }
 } 
