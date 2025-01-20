@@ -32,7 +32,7 @@
                     {% endif %}
                 </div>
             </header>
-            <div class="post-content">
+            <div class="post-content line-numbers">
                 {{ page.content | safe }}
             </div>
         </article>
@@ -102,7 +102,10 @@
 }
 
 .post-content {
-    padding: 0 2rem 2rem;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* 移除不必要的边距 */
@@ -133,6 +136,112 @@
         font-size: 1.75rem;
     }
 }
+
+/* 修改行号样式 */
+.line-numbers {
+    counter-reset: line;
+    position: relative;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* 调整段落样式 */
+.line-numbers p {
+    position: relative;
+    margin: 0;
+    padding: 0.25rem 0;
+    min-height: 1.6em;
+    display: flex;
+}
+
+/* 显示行号 */
+.line-numbers p::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 2.5rem;
+    text-align: right;
+    padding-right: 1rem;
+    color: #999;
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-size: 0.875em;
+    user-select: none;
+}
+
+/* 段落内容 */
+.line-numbers p span {
+    flex: 1;
+}
+
+/* 悬停效果 */
+.line-numbers p:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* 代码块样式 */
+.line-numbers pre {
+    margin: 1rem 0;
+    background: #f8f9fa;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.line-numbers pre code {
+    display: block;
+    counter-reset: line;
+    padding: 1rem 0;
+}
+
+.line-numbers pre code > span {
+    display: block;
+    position: relative;
+    padding: 0 1rem 0 3.5rem;
+    min-height: 1.6em;
+}
+
+.line-numbers pre code > span::before {
+    counter-increment: line;
+    content: counter(line);
+    position: absolute;
+    left: 0;
+    width: 2.5rem;
+    text-align: right;
+    padding-right: 1rem;
+    color: #999;
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-size: 0.875em;
+    user-select: none;
+}
+
+/* 代码块行悬停效果 */
+.line-numbers pre code > span:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* 调整标题样式 */
+.post-title {
+    color: #333;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+/* 调整日期样式 */
+.post-meta time {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .line-numbers p {
+        padding-left: 2.5rem;
+    }
+    
+    .line-numbers p::before {
+        width: 1.5rem;
+        font-size: 0.75rem;
+    }
+}
 </style>
 
 <script>
@@ -148,6 +257,58 @@
             });
         }
     }
+
+    // 为每个段落添加行号和链接功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const content = document.querySelector('.post-content');
+        let lineNumber = 0;
+        
+        // 处理所有文本节点和段落
+        const processNode = (node) => {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+                // 将文本节点包装在段落中
+                const p = document.createElement('p');
+                const span = document.createElement('span');
+                span.textContent = node.textContent;
+                p.appendChild(span);
+                node.parentNode.replaceChild(p, node);
+                
+                // 添加行号和ID
+                lineNumber++;
+                p.id = `L${lineNumber}`;
+            } else if (node.nodeName === 'P') {
+                // 已经是段落的情况
+                const content = node.innerHTML;
+                node.innerHTML = `<span>${content}</span>`;
+                lineNumber++;
+                node.id = `L${lineNumber}`;
+            }
+        };
+        
+        // 递归处理所有节点
+        const walkNodes = (node) => {
+            const children = Array.from(node.childNodes);
+            children.forEach(child => {
+                if (child.nodeName !== 'PRE') { // 跳过代码块
+                    if (child.nodeType === Node.TEXT_NODE || child.nodeName === 'P') {
+                        processNode(child);
+                    } else {
+                        walkNodes(child);
+                    }
+                }
+            });
+        };
+        
+        walkNodes(content);
+        
+        // 处理代码块
+        content.querySelectorAll('pre code').forEach(block => {
+            const lines = block.textContent.split('\n');
+            block.innerHTML = lines
+                .map(line => `<span>${line}</span>`)
+                .join('\n');
+        });
+    });
 </script>
 
 <!-- 在文章页面添加 Article 结构化数据 -->

@@ -14,16 +14,27 @@ document.getElementById('search-dialog').addEventListener('click', function(e) {
     }
 });
 
+// 添加高亮函数
+function highlightText(text, query) {
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedQuery})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+}
+
 // 执行搜索
 async function performSearch() {
     const query = document.getElementById('search-input').value.trim();
     if (!query) return;
 
     const resultsContainer = document.getElementById('search-results');
-    resultsContainer.innerHTML = '<div class="search-loading">搜索中...</div>';
-
+    const searchBtn = document.querySelector('.search-header button');
+    
     try {
-        // 使用 POST 请求
+        // 显示加载状态
+        searchBtn.disabled = true;
+        searchBtn.textContent = '搜索中...';
+        resultsContainer.innerHTML = '<div class="search-loading">搜索中...</div>';
+
         const response = await fetch(SEARCH_API, {
             method: 'POST',
             headers: {
@@ -37,7 +48,7 @@ async function performSearch() {
         }
         
         const results = await response.json();
-        displayResults(results);
+        displayResults(results, query);
     } catch (error) {
         console.error('搜索出错:', error);
         resultsContainer.innerHTML = `
@@ -46,11 +57,27 @@ async function performSearch() {
                 <small>${error.message}</small>
             </div>
         `;
+    } finally {
+        // 恢复按钮状态
+        searchBtn.disabled = false;
+        searchBtn.textContent = '搜索';
     }
 }
 
+// 格式化博客 URL
+function formatBlogUrl(path) {
+    // 移除 .md 扩展名
+    const withoutExt = path.replace(/\.md$/, '');
+    
+    // 如果路径以 blog/ 开头，移除它
+    const cleanPath = withoutExt.replace(/^blog\//, '');
+    
+    // 构建完整的博客 URL
+    return `/blog/${cleanPath}/`;
+}
+
 // 显示搜索结果
-function displayResults(results) {
+function displayResults(results, query) {
     const container = document.getElementById('search-results');
     
     if (!results || results.length === 0) {
@@ -59,16 +86,29 @@ function displayResults(results) {
     }
 
     const html = results.map(result => {
-        const title = result.path.split('/').pop().replace('.md', '');
+        const contextBefore = result.context_before
+            ?.map(line => `<p class="context-line">${highlightText(line, query)}</p>`)
+            .join('') || '';
+            
+        const contextAfter = result.context_after
+            ?.map(line => `<p class="context-line">${highlightText(line, query)}</p>`)
+            .join('') || '';
+
+        // 使用 formatBlogUrl 处理路径
+        const blogUrl = formatBlogUrl(result.path);
+
         return `
             <article class="search-result">
-                <a href="${result.path}">
-                    <h3 class="result-title">${title}</h3>
-                    <div class="result-meta">
+                <a href="${blogUrl}">
+                    <div class="result-header">
                         <span class="result-path">${result.path}</span>
                         <span class="result-line">第 ${result.line_number} 行</span>
                     </div>
-                    <p class="result-content">${result.content}</p>
+                    <div class="result-content">
+                        ${contextBefore}
+                        <p class="match-line">${highlightText(result.content, query)}</p>
+                        ${contextAfter}
+                    </div>
                 </a>
             </article>
         `;
@@ -76,6 +116,91 @@ function displayResults(results) {
 
     container.innerHTML = html;
 }
+
+// 添加样式
+const style = document.createElement('style');
+style.textContent = `
+.search-result {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.search-result:hover {
+    border-color: #ddd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.search-result a {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.result-path {
+    color: #0366d6;
+}
+
+.result-line {
+    color: #666;
+}
+
+.result-content {
+    font-size: 0.925rem;
+    line-height: 1.6;
+}
+
+.context-line {
+    color: #666;
+    margin: 0;
+    padding: 0.125rem 0;
+}
+
+.match-line {
+    background: #fffbdd;
+    margin: 0;
+    padding: 0.125rem 0;
+}
+
+mark {
+    background: #fff5b1;
+    padding: 0.125em 0;
+    border-radius: 2px;
+}
+
+.search-loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.search-error {
+    text-align: center;
+    padding: 2rem;
+    color: #e53e3e;
+}
+
+.no-result {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+`;
+
+document.head.appendChild(style);
 
 // ESC 键关闭对话框
 document.addEventListener('keydown', function(e) {
