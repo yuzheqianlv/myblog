@@ -2,6 +2,27 @@
 
 基于 Zola 静态站点生成器构建的个人博客，主要包含文章和图库功能。
 
+## 功能特点
+
+1. 文章
+   - Markdown 支持
+   - 代码高亮
+   - 标签分类
+   - 文章目录
+   - 行号显示
+
+2. 图库
+   - 图片预览
+   - 懒加载优化
+   - 响应式布局
+
+3. 搜索功能
+   - 全文搜索
+   - 实时搜索
+   - 搜索词高亮
+   - 上下文预览
+   - 行号定位
+
 ## 文件结构
 
 ```
@@ -15,174 +36,80 @@
 │   └── hello-world.md        # 示例文章
 ├── static/                    # 静态资源
 │   ├── favicon.ico           # 网站图标
-│   ├── images/               # 图片资源
 │   ├── js/                   # JavaScript 文件
-│   ├── logo.jpeg             # 网站 Logo
-│   └── style.css             # 全局样式
-├── scripts/                   # 脚本工具
-│   └── update_gallery.sh     # 图库更新脚本
-└── templates/                 # 模板文件
-    ├── about.html            # 关于页面模板
-    ├── base.html             # 基础模板
-    ├── blog-page.html        # 文章页面模板
-    ├── blog.html             # 博客列表模板
-    ├── friends.html          # 友链页面模板
-    ├── gallery-page.html     # 图片详情模板
-    ├── gallery.html          # 图库列表模板
-    ├── index.html            # 首页模板
-    ├── shortcodes/           # 短代码模板
-    ├── taxonomy_list.html    # 分类列表模板
-    └── taxonomy_single.html  # 分类详情模板
+│   │   └── search.js         # 搜索功能脚本
+│   ├── css/                  # 样式文件
+│   └── images/               # 图片资源
+├── templates/                 # 模板目录
+│   ├── base.html             # 基础模板
+│   ├── blog.html             # 博客列表模板
+│   ├── blog-page.html        # 博客文章模板
+│   ├── gallery.html          # 图库模板
+│   └── search.html           # 搜索页面模板
+└── vercel.json               # Vercel 部署配置
 ```
 
-## 主要文件说明
+## 搜索服务
 
-### 1. 模板文件
+博客使用独立的搜索服务提供全文搜索功能：
 
-#### templates/base.html
-基础模板，定义网站的整体结构：
-- 导航栏和页脚
-- 主题切换功能
-- 全局样式和脚本引入
-- SEO 相关配置
+- 基于 Rust + Axum 构建
+- 使用 ripgrep 进行全文搜索
+- 部署在 Shuttle 平台
+- 支持实时搜索和结果高亮
+- 提供上下文预览
 
-#### templates/blog-page.html
-文章页面模板，负责渲染单篇文章：
-```html
-{% extends "base.html" %}
-```
-- 文章内容渲染
-- 代码高亮
-- 响应式布局适配
-- 阅读进度指示
+## 部署说明
 
-#### templates/gallery.html
-图库页面模板，实现图片展示功能：
-```html
-{% extends "base.html" %}
-```
-- 图片网格布局
-- 懒加载优化
-- 渐进式加载
-- 悬停效果
-- 错误处理
-- 触摸设备支持
+1. 博客部署
+   ```bash
+   # 安装 Zola
+   brew install zola
 
-#### templates/shortcodes/markdown.html
-Markdown 渲染增强：
-- 代码块样式
-- 图片优化
-- 表格美化
-- 引用样式
-- 链接样式
+   # 本地预览
+   zola serve
 
-### 2. 内容组织
+   # 构建静态文件
+   zola build
+   ```
 
-#### content/blog/
-博客文章目录，每篇文章包含：
-```toml
-+++
-title = "文章标题"
-date = 2024-01-01
-description = "文章描述"
-[taxonomies]
-tags = ["标签1", "标签2"]
-+++
-```
-- front matter 配置
-- Markdown 内容
-- 标签分类
+2. 搜索服务部署
+   ```bash
+   # 部署到 Shuttle
+   cargo shuttle deploy
+   ```
 
-#### content/gallery/
-图片集目录：
-```toml
-+++
-title = "图片标题"
-description = "图片描述"
-date = 2024-01-01
-[extra]
-image = "images/example.jpg"
-+++
-```
-- 图片元数据
-- 展示配置
-- 分类信息
+## SEO 优化
 
-### 3. 配置文件
+1. 基础优化
+   - 语义化 HTML
+   - 合理的标题层级
+   - 内部链接优化
+   - 图片 ALT 属性
 
-#### config.toml
-Zola 站点配置：
-```toml
-base_url = "/"
-title = "博客标题"
-description = "博客描述"
+2. 性能优化
+   - 静态资源压缩
+   - 图片懒加载
+   - 代码分割
+   - 缓存策略
 
-[markdown]
-highlight_code = true
-render_emoji = true
+3. 站点地图
+   - XML 站点地图
+   - RSS Feed
+   - robots.txt
 
-[extra]
-author = "作者名"
-```
-- 站点信息
-- 构建配置
-- 主题设置
-- 自定义变量
+4. 搜索引擎验证
+   - Google Search Console
+   - 百度站长平台
+   - Bing Webmaster Tools
 
-## 功能实现细节
+## 开发计划
 
-### 图库功能
-- 使用 CSS Grid 实现响应式布局
-- IntersectionObserver 实现图片懒加载
-- CSS transforms 和 filters 实现过渡效果
-- 使用 will-change 优化性能
-
-### 性能优化
-- 图片懒加载
-- 代码分割
-- 资源预加载
-- 缓存策略
-- 响应式图片
-
-### 主题支持
-- CSS 变量实现主题切换
-- 媒体查询适配暗色模式
-- 平滑过渡效果
-- 主题持久化存储
-
-## 开发和部署流程
-
-### 环境要求
-
-- [Zola](https://www.getzola.org/) 0.17.0 或更高版本
-
-### 本地开发
-
-1. 克隆仓库：
-```bash
-git clone https://github.com/yourusername/blog.git
-cd blog
-```
-
-2. 启动 Zola 开发服务器：
-```bash
-zola serve
-```
-
-### 构建
-
-```bash
-# 构建站点
-zola build
-```
-
-## 部署
-
-本项目已配置为可直接部署到 Vercel：
-
-1. Fork 本仓库
-2. 在 Vercel 中导入项目
-3. 部署
+1. [ ] 评论功能
+2. [ ] 暗色主题
+3. [ ] 文章统计
+4. [ ] 阅读时间估算
+5. [ ] 相关文章推荐
 
 ## 许可证
 
