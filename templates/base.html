@@ -68,6 +68,11 @@
                         <li><a href="{{ get_url(path='tags') }}">标签</a></li>
                         <li><a href="{{ get_url(path='about') }}">关于</a></li>
                         <li><a href="{{ get_url(path='friends') }}">友链</a></li>
+                        <li>
+                            <a href="javascript:void(0)" onclick="openSearch()" class="search-link">
+                                搜索
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -76,6 +81,17 @@
         <main class="content">
             {% block content %} {% endblock %}
         </main>
+    </div>
+
+    <!-- 添加搜索对话框 -->
+    <div id="search-dialog" class="search-dialog">
+        <div class="search-container">
+            <div class="search-header">
+                <input type="text" id="search-input" placeholder="输入关键词搜索...">
+                <button onclick="performSearch()">搜索</button>
+            </div>
+            <div id="search-results"></div>
+        </div>
     </div>
 
 <style>
@@ -222,5 +238,8 @@
     }
 }
 </style>
+
+<!-- 添加搜索脚本引用 -->
+<script src="{{ get_url(path='js/search.js') | safe }}"></script>
 </body>
 </html> 

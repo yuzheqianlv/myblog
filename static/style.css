@@ -5,6 +5,10 @@
     --border-color: #eaeaea;
     --sidebar-width: 280px;
     --link-color: #42b983;
+    --primary-color: #42b983;
+    --primary-dark-color: #3aa876;
+    --secondary-color: #718096;
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 html {
@@ -559,4 +563,117 @@ pre code {
 
 .quick-links a:hover {
     text-decoration: underline;
+}
+
+/* 搜索对话框样式 */
+.search-dialog {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 80px;
+}
+
+.search-container {
+    background: var(--bg-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.search-header {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+#search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.search-header button {
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.search-header button:hover {
+    background: var(--primary-dark-color);
+    transform: translateY(-1px);
+}
+
+/* 搜索结果样式 */
+#search-results {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.search-result {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.search-result:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.search-result a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.result-title {
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+    color: var(--primary-color);
+}
+
+.result-content {
+    font-size: 0.925rem;
+    color: var(--secondary-color);
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+
+.no-result {
+    text-align: center;
+    padding: 2rem;
+    color: var(--secondary-color);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .search-dialog {
+        padding-top: 40px;
+    }
+    
+    .search-header {
+        flex-direction: column;
+    }
+    
+    .search-header button {
+        width: 100%;
+    }
 }
