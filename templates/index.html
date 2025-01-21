@@ -3,71 +3,68 @@
 {% block content %}
 <div class="page-content home-content">
     <div class="welcome-section">
-        <h1 class="welcome-title animate-text">欢迎来到千虑者的博客</h1>
+        <h1 class="welcome-title typewriter"></h1>
         <div class="welcome-text">
-            <div class="intro-text animate-text">
-                这是一个专注于技术分享和学习记录的个人博客。主要关注：
-            </div>
+            <div class="intro-text typewriter"></div>
             
             <div class="feature-list">
-                <div class="feature-item animate-text">
+                <div class="feature-item">
                     <div class="feature-header">
                         <span class="feature-icon">📝</span>
-                        <h3>技术探索</h3>
+                        <h3 class="typewriter"></h3>
                     </div>
-                    <p>深入研究 Rust、WebAssembly、系统编程等领域的技术实践</p>
+                    <p class="typewriter"></p>
                 </div>
-                <div class="feature-item animate-text">
+                <div class="feature-item">
                     <div class="feature-header">
                         <span class="feature-icon">🔧</span>
-                        <h3>工程实践</h3>
+                        <h3 class="typewriter"></h3>
                     </div>
-                    <p>分享软件开发中的最佳实践、架构设计和性能优化经验</p>
+                    <p class="typewriter"></p>
                 </div>
-                <div class="feature-item animate-text">
+                <div class="feature-item">
                     <div class="feature-header">
                         <span class="feature-icon">📚</span>
-                        <h3>学习笔记</h3>
+                        <h3 class="typewriter"></h3>
                     </div>
-                    <p>记录技术书籍阅读心得和学习过程中的思考总结</p>
+                    <p class="typewriter"></p>
                 </div>
-                <div class="feature-item animate-text">
+                <div class="feature-item">
                     <div class="feature-header">
                         <span class="feature-icon">🎨</span>
-                        <h3>项目实战</h3>
+                        <h3 class="typewriter"></h3>
                     </div>
-                    <p>展示个人开源项目和有趣的技术实验</p>
+                    <p class="typewriter"></p>
                 </div>
             </div>
 
-            <div class="blog-description animate-text">
-                <p>博客名「千虑者」源于"智者千虑必有一失，愚者千虑必有一得"，
-                   寓意在技术探索的道路上保持开放和谦逊的心态。</p>
-                <p>通过写作和分享，记录技术成长的点滴，也希望能为开发者社区贡献一份力量。</p>
+            <div class="blog-description">
+                <p class="typewriter"></p>
+                <p class="typewriter"></p>
             </div>
 
             <div class="blog-features">
-                <h2 class="animate-text">博客特点</h2>
+                <h2 class="typewriter"></h2>
                 <div class="features-grid">
-                    <div class="feature-card animate-text">
+                    <div class="feature-card">
                         <span class="feature-icon">⚡</span>
-                        <h3>高性能</h3>
-                        <p>基于 Zola 静态站点生成器，快速加载，极致体验</p>
+                        <h3 class="typewriter"></h3>
+                        <p class="typewriter"></p>
                     </div>
-                    <div class="feature-card animate-text">
+                    <div class="feature-card">
                         <span class="feature-icon">🔍</span>
-                        <h3>全文搜索</h3>
-                        <p>基于 Rust 实现的高性能全文搜索功能</p>
+                        <h3 class="typewriter"></h3>
+                        <p class="typewriter"></p>
                     </div>
-                    <div class="feature-card animate-text">
+                    <div class="feature-card">
                         <span class="feature-icon">📱</span>
-                        <h3>响应式设计</h3>
-                        <p>完美适配各种设备，提供最佳阅读体验</p>
+                        <h3 class="typewriter"></h3>
+                        <p class="typewriter"></p>
                     </div>
-                    <div class="feature-card animate-text">
+                    <div class="feature-card">
                         <span class="feature-icon">🎨</span>
-                        <h3>优雅排版</h3>
-                        <p>精心设计的版式和配色，让阅读更加舒适</p>
+                        <h3 class="typewriter"></h3>
+                        <p class="typewriter"></p>
                     </div>
                 </div>
             </div>
@@ -234,22 +231,173 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* 修改打字机效果相关样式 */
+.typewriter {
+    border-right: 2px solid transparent; /* 改为透明边框 */
+    white-space: pre-wrap;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.typewriter.typing {
+    opacity: 1;
+    border-right-color: var(--primary-color); /* 打字时显示光标 */
+}
+
+.typewriter.completed {
+    opacity: 1;
+    border-right-color: transparent; /* 完成后隐藏光标 */
+}
+
+.typewriter.typing::after {
+    content: '';
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
 </style>
 
 <script>
-// 更新动画脚本
-document.addEventListener('DOMContentLoaded', function() {
-    // 获取所有需要动画的元素
-    const animateElements = document.querySelectorAll('.animate-text');
-    
+// 修改打字机效果实现
+class Typewriter {
+    constructor(element, text, options = {}) {
+        this.element = element;
+        this.text = text;
+        this.delay = options.delay || 50;
+        this.startDelay = options.startDelay || 0;
+        this.onComplete = options.onComplete;
+        this.cursor = options.cursor !== false;
+        this.currentChar = 0;
+    }
+
+    start() {
+        this.element.classList.add('typing');
+        setTimeout(() => this.type(), this.startDelay);
+    }
+
+    type() {
+        if (this.currentChar < this.text.length) {
+            this.element.textContent = this.text.slice(0, ++this.currentChar);
+            setTimeout(() => this.type(), this.delay);
+        } else {
+            this.element.classList.remove('typing');
+            this.element.classList.add('completed'); // 添加完成状态类
+            if (this.onComplete) {
+                this.onComplete();
+            }
+        }
+    }
+}
+
+// 初始化所有文字内容
+document.addEventListener('DOMContentLoaded', () => {
+    const contents = {
+        '.welcome-title': {
+            text: '欢迎来到千虑者的博客',
+            delay: 100
+        },
+        '.intro-text': {
+            text: '这是一个专注于技术分享和学习记录的个人博客。主要关注：',
+            delay: 50,
+            startDelay: 1000
+        },
+        '.feature-item:nth-child(1) h3': {
+            text: '技术探索',
+            startDelay: 2000
+        },
+        '.feature-item:nth-child(1) p': {
+            text: '深入研究 Rust、WebAssembly、系统编程等领域的技术实践',
+            startDelay: 2500
+        },
+        '.feature-item:nth-child(2) h3': {
+            text: '工程实践',
+            startDelay: 3000
+        },
+        '.feature-item:nth-child(2) p': {
+            text: '分享软件开发中的最佳实践、架构设计和性能优化经验',
+            startDelay: 3500
+        },
+        '.feature-item:nth-child(3) h3': {
+            text: '学习笔记',
+            startDelay: 4000
+        },
+        '.feature-item:nth-child(3) p': {
+            text: '记录技术书籍阅读心得和学习过程中的思考总结',
+            startDelay: 4500
+        },
+        '.feature-item:nth-child(4) h3': {
+            text: '项目实战',
+            startDelay: 5000
+        },
+        '.feature-item:nth-child(4) p': {
+            text: '展示个人开源项目和有趣的技术实验',
+            startDelay: 5500
+        },
+        '.blog-description p:nth-child(1)': {
+            text: '博客名「千虑者」源于"智者千虑必有一失，愚者千虑必有一得"，寓意在技术探索的道路上保持开放和谦逊的心态。',
+            startDelay: 6000
+        },
+        '.blog-description p:nth-child(2)': {
+            text: '通过写作和分享，记录技术成长的点滴，也希望能为开发者社区贡献一份力量。',
+            startDelay: 6500
+        },
+        '.blog-features h2': {
+            text: '博客特点',
+            startDelay: 7000
+        },
+        '.blog-features .feature-card:nth-child(1) h3': {
+            text: '高性能',
+            startDelay: 7200
+        },
+        '.blog-features .feature-card:nth-child(1) p': {
+            text: '基于 Zola 静态站点生成器，快速加载，极致体验',
+            startDelay: 7400
+        },
+        '.blog-features .feature-card:nth-child(2) h3': {
+            text: '全文搜索',
+            startDelay: 7600
+        },
+        '.blog-features .feature-card:nth-child(2) p': {
+            text: '基于 Rust 实现的高性能全文搜索功能',
+            startDelay: 7800
+        },
+        '.blog-features .feature-card:nth-child(3) h3': {
+            text: '响应式设计',
+            startDelay: 8000
+        },
+        '.blog-features .feature-card:nth-child(3) p': {
+            text: '完美适配各种设备，提供最佳阅读体验',
+            startDelay: 8200
+        },
+        '.blog-features .feature-card:nth-child(4) h3': {
+            text: '优雅排版',
+            startDelay: 8400
+        },
+        '.blog-features .feature-card:nth-child(4) p': {
+            text: '精心设计的版式和配色，让阅读更加舒适',
+            startDelay: 8600
+        }
+    };
+
     // 创建 Intersection Observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // 添加动画类
-                entry.target.classList.add('animate');
-                // 停止观察该元素
-                observer.unobserve(entry.target);
+                const element = entry.target;
+                const config = contents[getSelector(element)];
+                if (config) {
+                    new Typewriter(element, config.text, {
+                        delay: config.delay,
+                        startDelay: config.startDelay,
+                        cursor: config.cursor,
+                        onComplete: config.onComplete
+                    }).start();
+                }
+                observer.unobserve(element);
             }
         });
     }, {
@@ -257,19 +405,18 @@ document.addEventListener('DOMContentLoaded', function() {
         rootMargin: '50px'
     });
 
-    // 观察所有动画元素
-    animateElements.forEach(element => {
-        observer.observe(element);
-    });
-});
+    // 获取元素的选择器
+    function getSelector(element) {
+        for (let selector in contents) {
+            if (element.matches(selector)) {
+                return selector;
+            }
+        }
+    }
 
-// 添加页面加载完成的动画触发
-window.addEventListener('load', function() {
-    // 立即触发首屏元素的动画
-    document.querySelectorAll('.animate-text').forEach((el, index) => {
-        setTimeout(() => {
-            el.classList.add('animate');
-        }, index * 100); // 每个元素间隔 100ms
+    // 观察所有打字机元素
+    document.querySelectorAll('.typewriter').forEach(element => {
+        observer.observe(element);
     });
 });
 </script>

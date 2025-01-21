@@ -6,10 +6,10 @@
     <meta name="X-UA-Compatible" content="IE=edge">
     
     <!-- SEO Meta Tags -->
-    <title>{% block title %}{{ config.title }}{% endblock title %} - {{ config.extra.subtitle }}</title>
+    <title>{% block title %}{{ config.title }}{% endblock %} - {{ config.extra.subtitle }}</title>
     <meta name="author" content="{{ config.extra.author }}">
-    <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
-    <meta name="keywords" content="{% block keywords %}{{ config.extra.keywords }}{% endblock keywords %}">
+    <meta name="description" content="{% block description %}{{ config.description }}{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}{{ config.extra.keywords }}{% endblock %}">
     <meta name="robots" content="index, follow">
     
     <!-- Mobile Meta -->
@@ -48,9 +48,204 @@
     <link rel="stylesheet" href="{{ get_url(path='style.css') | safe }}">
     <link rel="canonical" href="{{ current_url | safe }}">
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="{{ get_url(path='rss.xml') | safe }}">
+    
+    <!-- Theme Support -->
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
+    
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --title-color: #1a1a1a;
+            --border-color: #eaeaea;
+            --link-color: #42b983;
+            --primary-color: #42b983;
+            --secondary-color: #718096;
+            --hover-color: rgba(66, 185, 131, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --code-bg: #f6f8fa;
+            --code-color: #476582;
+        }
+        
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --title-color: #ffffff;
+            --border-color: #333333;
+            --link-color: #5ccb91;
+            --primary-color: #5ccb91;
+            --secondary-color: #a0aec0;
+            --hover-color: rgba(92, 203, 145, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --code-bg: #2d2d2d;
+            --code-color: #e2e8f0;
+        }
+        
+        /* 主题切换按钮样式 */
+        .theme-toggle {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+        
+        /* 添加平滑过渡 */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* 容器样式 */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            position: fixed;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-color);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem;
+            overflow-y: auto;
+            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+            
+            /* 添加弹性布局实现居中 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 调整内容容器样式 */
+        .sidebar-content {
+            width: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            
+            /* 添加弹性布局 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .sidebar-content::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* 调整 profile 样式 */
+        .profile {
+            text-align: center;
+            width: 100%;
+            margin: 0; /* 移除底部边距 */
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--border-color);
+            background: var(--bg-color);
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 70% center;
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .avatar:hover img {
+            transform: scale(1.15);
+        }
+        
+        .site-title {
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem;
+            color: var(--text-color);
+        }
+        
+        .site-description {
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* 导航样式 */
+        .nav {
+            width: 100%;
+        }
+        
+        .nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .nav a:hover {
+            background: var(--hover-color);
+            transform: translateX(4px);
+        }
+        
+        /* 主内容区域样式 */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        /* 响应式布局 */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -72,9 +267,7 @@
                         <li><a href="{{ get_url(path='about') }}">关于</a></li>
                         <li><a href="{{ get_url(path='friends') }}">友链</a></li>
                         <li>
-                            <a href="javascript:void(0)" onclick="openSearch()" class="search-link">
-                                搜索
-                            </a>
+                            <a href="javascript:void(0)" onclick="openSearch()">搜索</a>
                         </li>
                         <li>
                             <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">
@@ -87,11 +280,11 @@
         </aside>
 
         <main class="content">
-            {% block content %} {% endblock %}
+            {% block content %}{% endblock %}
         </main>
     </div>
 
-    <!-- 添加搜索对话框 -->
+    <!-- 搜索对话框 -->
     <div id="search-dialog" class="search-dialog">
         <div class="search-container">
             <div class="search-header">
@@ -102,264 +295,69 @@
         </div>
     </div>
 
-<style>
-:root {
-    /* 浅色主题变量 */
-    --bg-color: #ffffff;
-    --text-color: #333333;
-    --title-color: #1a1a1a;
-    --border-color: #eaeaea;
-    --link-color: #42b983;
-    --primary-color: #42b983;
-    --secondary-color: #718096;
-    --hover-color: rgba(66, 185, 131, 0.1);
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --code-bg: #f6f8fa;
-    --code-color: #476582;
-}
+    <!-- 脚本放在 body 末尾 -->
+    <script src="{{ get_url(path='js/search.js') | safe }}"></script>
+    <script>
+        // 主题管理
+        const themeManager = {
+            // 获取系统主题偏好
+            getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            },
 
-/* 深色主题变量 */
-[data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --text-color: #e0e0e0;
-    --title-color: #ffffff;
-    --border-color: #333333;
-    --link-color: #5ccb91;
-    --primary-color: #5ccb91;
-    --secondary-color: #a0aec0;
-    --hover-color: rgba(92, 203, 145, 0.1);
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --code-bg: #2d2d2d;
-    --code-color: #e2e8f0;
-}
+            // 获取当前时间是否在夜间模式范围内
+            isNightTime() {
+                const hour = new Date().getHours();
+                const startHour = {% if config.extra.theme.dark_mode_time %}{{ config.extra.theme.dark_mode_time.start | default(value=22) }}{% else %}22{% endif %};
+                const endHour = {% if config.extra.theme.dark_mode_time %}{{ config.extra.theme.dark_mode_time.end | default(value=6) }}{% else %}6{% endif %};
+                return hour >= startHour || hour < endHour;
+            },
 
-/* 主题切换按钮样式 */
-.theme-toggle {
-    background: none;
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: var(--text-color);
-    transition: transform 0.3s ease;
-}
+            // 获取存储的主题
+            getSavedTheme() {
+                return localStorage.getItem('theme');
+            },
 
-.theme-toggle:hover {
-    transform: rotate(30deg);
-}
+            // 设置主题
+            setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon(theme);
+            },
 
-/* 添加平滑过渡 */
-body {
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+            // 更新主题图标
+            updateThemeIcon(theme) {
+                const icon = document.querySelector('.theme-toggle-icon');
+                icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+            },
 
-/* 容器样式 */
-.container {
-    display: flex;
-    min-height: 100vh;
-}
+            // 初始化主题
+            init() {
+                const savedTheme = this.getSavedTheme();
+                const systemTheme = this.getSystemTheme();
+                const shouldUseDark = {% if config.extra.theme %}{{ config.extra.theme.auto_dark | default(value=true) }}{% else %}true{% endif %} && this.isNightTime();
+                
+                const theme = savedTheme || (shouldUseDark ? 'dark' : systemTheme);
+                this.setTheme(theme);
 
-/* 侧边栏样式 */
-.sidebar {
-    position: fixed;
-    width: 280px;
-    height: 100vh;
-    background: var(--bg-color);
-    border-right: 1px solid var(--border-color);
-    padding: 2rem;
-    overflow-y: auto;
-    scrollbar-width: none;  /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-    
-    /* 添加弹性布局实现居中 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+                // 监听系统主题变化
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                    if (!this.getSavedTheme()) {
+                        this.setTheme(e.matches ? 'dark' : 'light');
+                    }
+                });
 
-/* 调整内容容器样式 */
-.sidebar-content {
-    width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    
-    /* 添加弹性布局 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-}
-
-.sidebar-content::-webkit-scrollbar {
-    display: none;
-}
-
-/* 调整 profile 样式 */
-.profile {
-    text-align: center;
-    width: 100%;
-    margin: 0; /* 移除底部边距 */
-}
-
-.avatar {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 1rem;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--border-color);
-    background: var(--bg-color);
-}
-
-.avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 70% center;
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
-}
-
-.avatar:hover img {
-    transform: scale(1.15);
-}
-
-.site-title {
-    font-size: 1.5rem;
-    margin: 0 0 0.5rem;
-    color: var(--text-color);
-}
-
-.site-description {
-    font-size: 0.875rem;
-    color: var(--secondary-color);
-    margin: 0;
-    line-height: 1.6;
-}
-
-/* 导航样式 */
-.nav {
-    width: 100%;
-}
-
-.nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.nav li {
-    margin-bottom: 0.25rem;
-}
-
-.nav a {
-    display: block;
-    padding: 0.5rem 1rem;
-    color: var(--text-color);
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.2s;
-    font-size: 0.95rem;
-    line-height: 1.4;
-}
-
-.nav a:hover {
-    background: var(--hover-color);
-    transform: translateX(4px);
-}
-
-/* 主内容区域样式 */
-.content {
-    flex: 1;
-    margin-left: 280px;
-    padding: 2rem;
-    min-height: 100vh;
-}
-
-/* 响应式布局 */
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        z-index: 1000;
-    }
-    
-    .sidebar.active {
-        transform: translateX(0);
-    }
-    
-    .content {
-        margin-left: 0;
-    }
-}
-</style>
-
-<!-- 添加搜索脚本引用 -->
-<script src="{{ get_url(path='js/search.js') | safe }}"></script>
-<script>
-// 主题管理
-const themeManager = {
-    // 获取系统主题偏好
-    getSystemTheme() {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    },
-
-    // 获取当前时间是否在夜间模式范围内
-    isNightTime() {
-        const hour = new Date().getHours();
-        const startHour = {{ config.extra.theme.dark_mode_time.start }};
-        const endHour = {{ config.extra.theme.dark_mode_time.end }};
-        return hour >= startHour || hour < endHour;
-    },
-
-    // 获取存储的主题
-    getSavedTheme() {
-        return localStorage.getItem('theme');
-    },
-
-    // 设置主题
-    setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        this.updateThemeIcon(theme);
-    },
-
-    // 更新主题图标
-    updateThemeIcon(theme) {
-        const icon = document.querySelector('.theme-toggle-icon');
-        icon.textContent = theme === 'dark' ? '🌙' : '☀️';
-    },
-
-    // 初始化主题
-    init() {
-        const savedTheme = this.getSavedTheme();
-        const systemTheme = this.getSystemTheme();
-        const shouldUseDark = {{ config.extra.theme.auto_dark }} && this.isNightTime();
-        
-        const theme = savedTheme || (shouldUseDark ? 'dark' : systemTheme);
-        this.setTheme(theme);
-
-        // 监听系统主题变化
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!this.getSavedTheme()) {
-                this.setTheme(e.matches ? 'dark' : 'light');
+                // 监听主题切换按钮点击
+                document.getElementById('theme-toggle').addEventListener('click', () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    this.setTheme(newTheme);
+                });
             }
-        });
+        };
 
-        // 监听主题切换按钮点击
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            this.setTheme(newTheme);
-        });
-    }
-};
-
-// 初始化主题管理
-document.addEventListener('DOMContentLoaded', () => themeManager.init());
-</script>
+        // 初始化主题管理
+        document.addEventListener('DOMContentLoaded', () => themeManager.init());
+    </script>
 </body>
-</html> 
+</html>
