@@ -40,6 +40,7 @@
 </div>
 
 <style>
+/* 文章容器样式 */
 .blog-container {
     display: flex;
     gap: 2rem;
@@ -50,16 +51,20 @@
 
 .blog-content {
     flex: 1;
-    min-width: 0; /* 防止内容溢出 */
+    min-width: 0;
 }
 
+/* 文章卡片样式 */
 .post {
-    background: white;
+    background: var(--bg-color);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px var(--shadow-color);
     overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 }
 
+/* 文章头部样式 */
 .post-header {
     padding: 2rem 2rem 0;
 }
@@ -68,7 +73,7 @@
     margin: 0 0 1rem;
     font-size: 2rem;
     line-height: 1.3;
-    color: var(--text-color);
+    color: var(--title-color);
 }
 
 .post-meta {
@@ -80,6 +85,7 @@
     font-size: 0.9rem;
 }
 
+/* 标签样式 */
 .post-tags {
     display: flex;
     gap: 0.5rem;
@@ -98,29 +104,189 @@
 
 .tag:hover {
     background: var(--hover-color);
-    border-color: var(--secondary-color);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
+/* 文章内容样式 */
 .post-content {
+    padding: 0 2rem 2rem;
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+/* 行号样式 */
+.line-numbers {
+    counter-reset: line;
+    position: relative;
+    padding-left: 3rem; /* 为行号预留空间 */
+}
+
+.line-numbers p {
+    position: relative;
+    margin: 0;
+    padding: 0.25rem 0;
+    min-height: 1.6em;
+    display: flex;
+}
+
+/* 调整行号位置和样式 */
+.line-numbers p::before {
+    counter-increment: line;
+    content: counter(line);
+    position: absolute;
+    left: -3rem; /* 将行号放置在预留空间中 */
+    width: 2rem;
+    text-align: right;
+    padding-right: 0.5rem;
+    color: var(--secondary-color);
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-size: 0.875em;
+    user-select: none;
+    opacity: 0.7;
+}
+
+/* 内容容器样式 */
+.line-numbers p span {
+    flex: 1;
+    min-width: 0;
+}
+
+/* 悬停效果 */
+.line-numbers p:hover {
+    background: var(--hover-color);
+}
+
+.line-numbers p:hover::before {
+    opacity: 1;
+    color: var(--primary-color);
+}
+
+/* 代码块行号样式 */
+.post-content pre {
+    position: relative;
+    padding-left: 3.5rem;
+}
+
+.post-content pre code {
+    counter-reset: line;
+}
+
+.post-content pre code > span {
+    display: block;
+    position: relative;
+    padding: 0.125rem 0;
+}
+
+.post-content pre code > span::before {
+    counter-increment: line;
+    content: counter(line);
+    position: absolute;
+    left: -3rem;
+    width: 2rem;
+    text-align: right;
+    padding-right: 0.5rem;
+    color: var(--secondary-color);
+    opacity: 0.7;
+    user-select: none;
+}
+
+/* 代码块样式 */
+.post-content pre {
+    margin: 1.5rem 0;
     padding: 1rem;
-    background: #fff;
+    background: var(--code-bg);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
 }
 
-/* 移除不必要的边距 */
-.post-content > :first-child {
-    margin-top: 0;
+.post-content code {
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--code-color);
+    padding: 0.2em 0.4em;
+    background: var(--code-bg);
+    border-radius: 3px;
 }
 
-.post-content > :last-child {
-    margin-bottom: 0;
+.post-content pre code {
+    padding: 0;
+    background: none;
 }
 
-/* 响应式布局 */
+/* 链接样式 */
+.post-content a {
+    color: var(--link-color);
+    text-decoration: none;
+    border-bottom: 1px solid var(--link-color);
+    opacity: 0.8;
+    transition: all 0.2s;
+}
+
+.post-content a:hover {
+    opacity: 1;
+    border-bottom-width: 2px;
+}
+
+/* 引用样式 */
+.post-content blockquote {
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid var(--primary-color);
+    background: var(--hover-color);
+    border-radius: 4px;
+    color: var(--text-color);
+}
+
+/* 表格样式 */
+.post-content table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+}
+
+.post-content th,
+.post-content td {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.post-content th {
+    background: var(--hover-color);
+    font-weight: 600;
+    color: var(--title-color);
+}
+
+.post-content tr:nth-child(even) {
+    background: var(--hover-color);
+}
+
+/* 列表样式 */
+.post-content ul,
+.post-content ol {
+    padding-left: 1.5rem;
+    color: var(--text-color);
+}
+
+.post-content li {
+    margin: 0.5rem 0;
+}
+
+/* 图片样式 */
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+}
+
+/* 响应式调整 */
 @media (max-width: 768px) {
     .blog-container {
-        flex-direction: column;
         padding: 1rem;
     }
 
@@ -135,111 +301,46 @@
     .post-title {
         font-size: 1.75rem;
     }
-}
 
-/* 修改行号样式 */
-.line-numbers {
-    counter-reset: line;
-    position: relative;
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-/* 调整段落样式 */
-.line-numbers p {
-    position: relative;
-    margin: 0;
-    padding: 0.25rem 0;
-    min-height: 1.6em;
-    display: flex;
-}
-
-/* 显示行号 */
-.line-numbers p::before {
-    counter-increment: line;
-    content: counter(line);
-    display: inline-block;
-    width: 2.5rem;
-    text-align: right;
-    padding-right: 1rem;
-    color: #999;
-    font-family: Consolas, Monaco, 'Courier New', monospace;
-    font-size: 0.875em;
-    user-select: none;
-}
-
-/* 段落内容 */
-.line-numbers p span {
-    flex: 1;
-}
-
-/* 悬停效果 */
-.line-numbers p:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-/* 代码块样式 */
-.line-numbers pre {
-    margin: 1rem 0;
-    background: #f8f9fa;
-    border-radius: 4px;
-    overflow-x: auto;
-}
-
-.line-numbers pre code {
-    display: block;
-    counter-reset: line;
-    padding: 1rem 0;
-}
-
-.line-numbers pre code > span {
-    display: block;
-    position: relative;
-    padding: 0 1rem 0 3.5rem;
-    min-height: 1.6em;
-}
-
-.line-numbers pre code > span::before {
-    counter-increment: line;
-    content: counter(line);
-    position: absolute;
-    left: 0;
-    width: 2.5rem;
-    text-align: right;
-    padding-right: 1rem;
-    color: #999;
-    font-family: Consolas, Monaco, 'Courier New', monospace;
-    font-size: 0.875em;
-    user-select: none;
-}
-
-/* 代码块行悬停效果 */
-.line-numbers pre code > span:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-/* 调整标题样式 */
-.post-title {
-    color: #333;
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-}
-
-/* 调整日期样式 */
-.post-meta time {
-    color: #666;
-    font-size: 0.875rem;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .line-numbers p {
+    .line-numbers {
         padding-left: 2.5rem;
     }
-    
+
     .line-numbers p::before {
+        left: -2.5rem;
         width: 1.5rem;
-        font-size: 0.75rem;
+    }
+
+    .post-content pre {
+        padding-left: 3rem;
+    }
+
+    .post-content pre code > span::before {
+        left: -2.5rem;
+        width: 1.5rem;
+    }
+}
+
+/* 深色模式下的特殊样式 */
+[data-theme="dark"] .post-content {
+    /* 调整图片亮度 */
+    img {
+        filter: brightness(0.8);
+    }
+
+    /* 调整代码高亮 */
+    .highlight {
+        filter: brightness(0.9);
+    }
+
+    /* 调整表格样式 */
+    tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* 调整引用样式 */
+    blockquote {
+        background: rgba(66, 185, 131, 0.1);
     }
 }
 </style>

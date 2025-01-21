@@ -1,25 +1,18 @@
 // 搜索服务配置
 const SEARCH_API = 'https://search-bpyd.shuttle.app/api/search';
 
-// 打开搜索对话框
-function openSearch() {
-    document.getElementById('search-dialog').style.display = 'flex';
-    document.getElementById('search-input').focus();
-}
+// 添加搜索缓存
+const searchCache = new Map();
+const CACHE_EXPIRE_TIME = 5 * 60 * 1000; // 缓存5分钟
 
-// 关闭搜索对话框
-document.getElementById('search-dialog').addEventListener('click', function(e) {
-    if (e.target === this) {
-        this.style.display = 'none';
-    }
-});
-
-// 添加高亮函数
-function highlightText(text, query) {
-    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`(${escapedQuery})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
-}
+// 防抖函数优化
+const debounce = (func, wait) => {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+};
 
 // 执行搜索
 async function performSearch() {
@@ -30,6 +23,14 @@ async function performSearch() {
     const searchBtn = document.querySelector('.search-header button');
     
     try {
+        // 检查缓存
+        const cacheKey = query.toLowerCase();
+        const cachedResult = searchCache.get(cacheKey);
+        if (cachedResult && (Date.now() - cachedResult.timestamp < CACHE_EXPIRE_TIME)) {
+            displayResults(cachedResult.data, query);
+            return;
+        }
+
         // 显示加载状态
         searchBtn.disabled = true;
         searchBtn.textContent = '搜索中...';
@@ -48,6 +49,13 @@ async function performSearch() {
         }
         
         const results = await response.json();
+        
+        // 更新缓存
+        searchCache.set(cacheKey, {
+            data: results,
+            timestamp: Date.now()
+        });
+
         displayResults(results, query);
     } catch (error) {
         console.error('搜索出错:', error);
@@ -62,6 +70,69 @@ async function performSearch() {
         searchBtn.disabled = false;
         searchBtn.textContent = '搜索';
     }
+}
+
+// 优化防抖延迟
+const debouncedSearch = debounce(performSearch, 200); // 减少延迟时间
+
+// 添加预加载功能
+function preloadCommonSearches() {
+    const commonQueries = ['rust', 'zola', 'blog']; // 常用搜索词
+    commonQueries.forEach(async query => {
+        try {
+            const response = await fetch(SEARCH_API, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query })
+            });
+            
+            if (response.ok) {
+                const results = await response.json();
+                searchCache.set(query, {
+                    data: results,
+                    timestamp: Date.now()
+                });
+            }
+        } catch (error) {
+            console.error('预加载搜索失败:', error);
+        }
+    });
+}
+
+// 页面加载完成后进行预加载
+document.addEventListener('DOMContentLoaded', () => {
+    // 延迟预加载，避免影响页面加载
+    setTimeout(preloadCommonSearches, 2000);
+});
+
+// 实时搜索监听
+document.getElementById('search-input').addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+    if (query.length >= 2) { // 只在输入至少2个字符时触发搜索
+        debouncedSearch();
+    }
+});
+
+// 打开搜索对话框
+function openSearch() {
+    document.getElementById('search-dialog').style.display = 'flex';
+    document.getElementById('search-input').focus();
+}
+
+// 关闭搜索对话框
+document.getElementById('search-dialog').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.style.display = 'none';
+    }
+});
+
+// 添加高亮函数
+function highlightText(text, query) {
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedQuery})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
 }
 
 // 格式化博客 URL
@@ -214,18 +285,4 @@ document.getElementById('search-input').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         performSearch();
     }
-});
-
-// 添加输入防抖
-const debounce = (func, wait) => {
-    let timeout;
-    return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-};
-
-// 实时搜索（延迟 300ms）
-document.getElementById('search-input').addEventListener('input', 
-    debounce(performSearch, 300)
-); 
+}); 

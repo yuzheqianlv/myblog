@@ -677,3 +677,45 @@ pre code {
         width: 100%;
     }
 }
+
+/* 在文件末尾添加深色主题样式 */
+[data-theme="dark"] {
+    /* 搜索对话框深色样式 */
+    .search-dialog {
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .search-container {
+        background: var(--bg-color);
+        border-color: var(--border-color);
+    }
+
+    .search-result {
+        background: var(--bg-color);
+        border-color: var(--border-color);
+    }
+
+    .search-result:hover {
+        border-color: var(--primary-color);
+    }
+
+    .match-line {
+        background: rgba(92, 203, 145, 0.1);
+    }
+
+    mark {
+        background: rgba(92, 203, 145, 0.2);
+        color: var(--primary-color);
+    }
+
+    /* 代码块深色样式 */
+    pre {
+        background: var(--code-bg);
+    }
+
+    code {
+        color: var(--code-color);
+    }
+
+    /* 其他深色样式... */
+}

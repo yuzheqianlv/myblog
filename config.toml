@@ -35,4 +35,8 @@ generate_sitemap = true
 sitemap_filename = "sitemap.xml"
 
 # 添加自定义配置
-enable_line_numbers = true 
+enable_line_numbers = true
+
+[extra.theme]
+auto_dark = true  # 启用自动夜间模式
+dark_mode_time = { start = 19, end = 7 }  # 夜间模式时间范围，19:00-07:00 
