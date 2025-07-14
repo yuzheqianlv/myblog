@@ -189,8 +189,8 @@ function displayResults(results, query) {
 }
 
 // 添加样式
-const style = document.createElement('style');
-style.textContent = `
+const searchStyle = document.createElement('style');
+searchStyle.textContent = `
 .search-result {
     background: #fff;
     border: 1px solid #eee;
@@ -271,7 +271,7 @@ mark {
 }
 `;
 
-document.head.appendChild(style);
+document.head.appendChild(searchStyle);
 
 // ESC 键关闭对话框
 document.addEventListener('keydown', function(e) {

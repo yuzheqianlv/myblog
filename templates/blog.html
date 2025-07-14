@@ -4,10 +4,10 @@
 
 {% block content %}
 <div class="blog-container">
-    <h1 class="page-title">最新文章</h1>
+    <h1 class="page-title animate-fade-in">最新文章</h1>
     <div class="post-list">
         {% for page in paginator.pages %}
-        <article class="post-item">
+        <article class="post-item animate-slide-up" data-animate-delay="{{ loop.index0 * 100 }}">
             <header class="post-header">
                 <h2 class="post-title">
                     <a href="{{ page.permalink }}">{{ page.title }}</a>
@@ -33,7 +33,7 @@
     </div>
 
     {% if paginator.previous or paginator.next %}
-    <nav class="pagination">
+    <nav class="pagination animate-fade-in" data-animate-delay="{{ paginator.pages | length * 100 + 200 }}">
         {% if paginator.previous %}
         <a href="{{ paginator.previous }}" class="prev">上一页</a>
         {% endif %}
@@ -69,12 +69,30 @@
     background: var(--bg-color);
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.post-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(66, 185, 131, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.post-item:hover::before {
+    left: 100%;
 }
 
 .post-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px var(--shadow-color);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 25px var(--shadow-color);
+    border-color: var(--primary-color);
 }
 
 .post-title {
@@ -171,5 +189,374 @@
     color: var(--secondary-color);
     font-size: 0.875rem;
 }
+
+/* 动画效果 */
+.animate-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 标题动画 */
+.post-title a {
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.post-title a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.post-title a:hover::after {
+    width: 100%;
+}
+
+.post-title a:hover {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+/* 标签动画 */
+.tag {
+    position: relative;
+    overflow: hidden;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(66, 185, 131, 0.3), transparent);
+    transition: left 0.4s ease;
+}
+
+.tag:hover::before {
+    left: 100%;
+}
+
+.tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 185, 131, 0.3);
+}
+
+/* 加载动画 */
+.loading-dots {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 2rem auto;
+}
+
+.loading-dots div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.loading-dots div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+
+.loading-dots div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+@keyframes lds-ellipsis3 {
+    0% { transform: scale(1); }
+    100% { transform: scale(0); }
+}
+
+@keyframes lds-ellipsis2 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(24px, 0); }
+}
+
+/* 响应式动画优化 */
+@media (max-width: 768px) {
+    .post-item:hover {
+        transform: translateY(-2px) scale(1.005);
+    }
+    
+    .post-title a:hover {
+        transform: translateX(3px);
+    }
+}
+
+/* 波纹效果 */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(66, 185, 131, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* 卡片激活状态 */
+.post-item.hover-active {
+    background: linear-gradient(135deg, var(--bg-color) 0%, rgba(66, 185, 131, 0.05) 100%);
+}
+
+/* 页面加载完成状态 */
+body.loaded .post-item {
+    animation-play-state: running;
+}
+
+/* 分页按钮增强效果 */
+.pagination a {
+    position: relative;
+    overflow: hidden;
+}
+
+.pagination a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(66, 185, 131, 0.3);
+    transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+    transform: translate(-50%, -50%);
+}
+
+.pagination a:hover::before {
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+}
+
+/* 文章描述淡入效果 */
+.post-description {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.post-item:hover .post-description {
+    opacity: 1;
+}
+
+/* 时间戳动画 */
+.post-meta time {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.post-meta time::before {
+    content: '📅';
+    position: absolute;
+    left: -25px;
+    top: 0;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.post-item:hover .post-meta time::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.post-item:hover .post-meta time {
+    color: var(--primary-color);
+}
+
+/* 磁性效果 */
+.post-item {
+    cursor: pointer;
+}
+
+.post-item:hover {
+    magnetic-effect: true;
+}
+
+/* 页面标题特效 */
+.page-title {
+    position: relative;
+    background: linear-gradient(135deg, var(--title-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    transform: translateX(-50%);
+    animation: titleUnderline 2s ease-in-out infinite;
+}
+
+@keyframes titleUnderline {
+    0%, 100% { width: 50px; opacity: 0.6; }
+    50% { width: 100px; opacity: 1; }
+}
+
+/* 减少动画对用户偏好的尊重 */
+@media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-slide-up {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+    
+    .post-item,
+    .post-title a,
+    .tag {
+        transition: none;
+    }
+    
+    .post-item:hover {
+        transform: none;
+    }
+    
+    .ripple {
+        display: none;
+    }
+    
+    .page-title::after {
+        animation: none;
+    }
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 创建Intersection Observer来观察元素进入视口
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const delay = element.dataset.animateDelay || 0;
+                
+                setTimeout(() => {
+                    element.style.animationDelay = delay + 'ms';
+                    element.classList.add('animate-in');
+                }, delay);
+                
+                observer.unobserve(element);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '50px'
+    });
+    
+    // 观察所有需要动画的元素
+    document.querySelectorAll('.animate-fade-in, .animate-slide-up').forEach(element => {
+        observer.observe(element);
+    });
+    
+    // 添加文章卡片的交互效果
+    document.querySelectorAll('.post-item').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.classList.add('hover-active');
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.classList.remove('hover-active');
+        });
+    });
+    
+    // 添加标签的点击波纹效果
+    document.querySelectorAll('.tag').forEach(tag => {
+        tag.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.left = e.offsetX + 'px';
+            ripple.style.top = e.offsetY + 'px';
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+    
+    // 添加页面加载完成后的入场动画
+    setTimeout(() => {
+        document.body.classList.add('loaded');
+    }, 100);
+});
+
+// 添加滚动视差效果
+window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const rate = scrolled * -0.5;
+    
+    document.querySelectorAll('.post-item').forEach((item, index) => {
+        const offset = index * 0.1;
+        item.style.transform = `translateY(${rate * offset}px)`;
+    });
+});
+</script>
 {% endblock content %} 
