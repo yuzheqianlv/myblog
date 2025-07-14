@@ -16,43 +16,27 @@
 {% block og_description %}{{ page.description }}{% endblock og_description %}
 
 {% block content %}
-<div class="blog-container">
-    <div class="blog-content">
-        <article class="post">
-            <header class="post-header">
-                <h1 class="post-title">{{ page.title }}</h1>
-                <div class="post-meta">
-                    <time>{{ page.date | date(format="%Y-%m-%d") }}</time>
-                    {% if page.taxonomies.tags %}
-                    <div class="post-tags">
-                        {% for tag in page.taxonomies.tags %}
-                        <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}" class="tag">{{ tag }}</a>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-            </header>
-            <div class="post-content line-numbers">
-                {{ page.content | safe }}
+<article class="post">
+    <header class="post-header">
+        <h1 class="post-title">{{ page.title }}</h1>
+        <div class="post-meta">
+            <time>{{ page.date | date(format="%Y-%m-%d") }}</time>
+            {% if page.taxonomies.tags %}
+            <div class="post-tags">
+                {% for tag in page.taxonomies.tags %}
+                <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}" class="tag">{{ tag }}</a>
+                {% endfor %}
             </div>
-        </article>
+            {% endif %}
+        </div>
+    </header>
+    <div class="post-content" id="post-content">
+        {{ page.content | safe }}
     </div>
-</div>
+</article>
 
 <style>
-/* 文章容器样式 */
-.blog-container {
-    display: flex;
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-}
 
-.blog-content {
-    flex: 1;
-    min-width: 0;
-}
 
 /* 文章卡片样式 */
 .post {
@@ -115,80 +99,75 @@
     line-height: 1.8;
 }
 
-/* 行号样式 */
-.line-numbers {
-    counter-reset: line;
+/* 标题锚点样式 */
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
     position: relative;
-    padding-left: 3rem; /* 为行号预留空间 */
+    margin: 2rem 0 1rem;
+    color: var(--title-color);
+    scroll-margin-top: 3rem;
 }
 
-.line-numbers p {
-    position: relative;
-    margin: 0;
-    padding: 0.25rem 0;
-    min-height: 1.6em;
-    display: flex;
-}
+.post-content h1 { font-size: 2rem; }
+.post-content h2 { font-size: 1.75rem; }
+.post-content h3 { font-size: 1.5rem; }
+.post-content h4 { font-size: 1.25rem; }
+.post-content h5 { font-size: 1.125rem; }
+.post-content h6 { font-size: 1rem; }
 
-/* 调整行号位置和样式 */
-.line-numbers p::before {
-    counter-increment: line;
-    content: counter(line);
+/* 锚点链接样式 */
+.anchor-link {
     position: absolute;
-    left: -3rem; /* 将行号放置在预留空间中 */
-    width: 2rem;
-    text-align: right;
-    padding-right: 0.5rem;
+    left: -1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
     color: var(--secondary-color);
-    font-family: Consolas, Monaco, 'Courier New', monospace;
-    font-size: 0.875em;
-    user-select: none;
-    opacity: 0.7;
+    text-decoration: none;
+    opacity: 0;
+    transition: all 0.2s;
+    font-size: 1rem;
+    text-align: center;
 }
 
-/* 内容容器样式 */
-.line-numbers p span {
-    flex: 1;
-    min-width: 0;
-}
-
-/* 悬停效果 */
-.line-numbers p:hover {
-    background: var(--hover-color);
-}
-
-.line-numbers p:hover::before {
+.post-content h1:hover .anchor-link,
+.post-content h2:hover .anchor-link,
+.post-content h3:hover .anchor-link,
+.post-content h4:hover .anchor-link,
+.post-content h5:hover .anchor-link,
+.post-content h6:hover .anchor-link {
     opacity: 1;
+}
+
+.anchor-link:hover {
     color: var(--primary-color);
+    transform: translateY(-50%) scale(1.1);
 }
 
-/* 代码块行号样式 */
-.post-content pre {
-    position: relative;
-    padding-left: 3.5rem;
+/* 高亮目标标题 */
+.post-content h1:target,
+.post-content h2:target,
+.post-content h3:target,
+.post-content h4:target,
+.post-content h5:target,
+.post-content h6:target {
+    background: linear-gradient(90deg, rgba(66, 185, 131, 0.1), transparent);
+    padding: 0.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    border-radius: 4px;
+    animation: highlightTarget 2s ease-out;
 }
 
-.post-content pre code {
-    counter-reset: line;
-}
-
-.post-content pre code > span {
-    display: block;
-    position: relative;
-    padding: 0.125rem 0;
-}
-
-.post-content pre code > span::before {
-    counter-increment: line;
-    content: counter(line);
-    position: absolute;
-    left: -3rem;
-    width: 2rem;
-    text-align: right;
-    padding-right: 0.5rem;
-    color: var(--secondary-color);
-    opacity: 0.7;
-    user-select: none;
+@keyframes highlightTarget {
+    0% { background: rgba(66, 185, 131, 0.3); }
+    100% { background: rgba(66, 185, 131, 0.1); }
 }
 
 /* 代码块样式 */
@@ -199,6 +178,7 @@
     border-radius: 8px;
     overflow-x: auto;
     border: 1px solid var(--border-color);
+    position: relative;
 }
 
 .post-content code {
@@ -213,6 +193,7 @@
 .post-content pre code {
     padding: 0;
     background: none;
+    display: block;
 }
 
 /* 链接样式 */
@@ -252,6 +233,7 @@
 .post-content td {
     padding: 0.75rem 1rem;
     border: 1px solid var(--border-color);
+    text-align: left;
 }
 
 .post-content th {
@@ -284,12 +266,8 @@
     border: 1px solid var(--border-color);
 }
 
-/* 响应式调整 */
+/* 移动端文章样式调整 */
 @media (max-width: 768px) {
-    .blog-container {
-        padding: 1rem;
-    }
-
     .post-header {
         padding: 1.5rem 1.5rem 0;
     }
@@ -302,114 +280,282 @@
         font-size: 1.75rem;
     }
 
-    .line-numbers {
-        padding-left: 2.5rem;
-    }
-
-    .line-numbers p::before {
-        left: -2.5rem;
-        width: 1.5rem;
-    }
-
-    .post-content pre {
-        padding-left: 3rem;
-    }
-
-    .post-content pre code > span::before {
-        left: -2.5rem;
-        width: 1.5rem;
+    .anchor-link {
+        left: -1rem;
+        font-size: 0.9rem;
     }
 }
 
+
 /* 深色模式下的特殊样式 */
-[data-theme="dark"] .post-content {
-    /* 调整图片亮度 */
-    img {
-        filter: brightness(0.8);
-    }
+[data-theme="dark"] .post-content img {
+    filter: brightness(0.8);
+}
 
-    /* 调整代码高亮 */
-    .highlight {
-        filter: brightness(0.9);
-    }
+[data-theme="dark"] .post-content .highlight {
+    filter: brightness(0.9);
+}
 
-    /* 调整表格样式 */
-    tr:nth-child(even) {
-        background: rgba(255, 255, 255, 0.03);
-    }
+[data-theme="dark"] .post-content tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.03);
+}
 
-    /* 调整引用样式 */
-    blockquote {
-        background: rgba(66, 185, 131, 0.1);
-    }
+[data-theme="dark"] .post-content blockquote {
+    background: rgba(66, 185, 131, 0.1);
 }
 </style>
 
 <script>
-    // 处理锚点跳转
-    if (window.location.hash) {
-        const targetLine = document.querySelector(window.location.hash);
-        if (targetLine) {
-            // 等待页面完全加载后再滚动
-            window.addEventListener('load', function() {
-                setTimeout(() => {
-                    targetLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-            });
-        }
+// 右侧边栏目录和智能锚点功能
+class RightSidebarToc {
+    constructor() {
+        this.tocContainer = document.getElementById('toc-content');
+        this.rightSidebar = document.getElementById('right-sidebar');
+        this.postContent = document.getElementById('post-content');
+        this.headings = [];
+        this.currentActive = null;
+        this.init();
     }
 
-    // 为每个段落添加行号和链接功能
-    document.addEventListener('DOMContentLoaded', function() {
-        const content = document.querySelector('.post-content');
-        let lineNumber = 0;
+    init() {
+        this.generateAnchors();
+        this.generateTOC();
+        this.setupScrollSpy();
+        this.handleInitialHash();
+        this.checkTocVisibility();
+    }
+
+    // 为标题生成锚点
+    generateAnchors() {
+        const headings = this.postContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
         
-        // 处理所有文本节点和段落
-        const processNode = (node) => {
-            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-                // 将文本节点包装在段落中
-                const p = document.createElement('p');
-                const span = document.createElement('span');
-                span.textContent = node.textContent;
-                p.appendChild(span);
-                node.parentNode.replaceChild(p, node);
-                
-                // 添加行号和ID
-                lineNumber++;
-                p.id = `L${lineNumber}`;
-            } else if (node.nodeName === 'P') {
-                // 已经是段落的情况
-                const content = node.innerHTML;
-                node.innerHTML = `<span>${content}</span>`;
-                lineNumber++;
-                node.id = `L${lineNumber}`;
+        headings.forEach((heading, index) => {
+            // 生成ID（如果没有的话）
+            if (!heading.id) {
+                const text = heading.textContent.trim();
+                const id = this.generateId(text, index);
+                heading.id = id;
             }
-        };
+
+            // 添加锚点链接
+            const anchor = document.createElement('a');
+            anchor.href = `#${heading.id}`;
+            anchor.className = 'anchor-link';
+            anchor.innerHTML = '🔗';
+            anchor.title = '复制链接';
+            anchor.setAttribute('aria-label', '锚点链接');
+            
+            heading.appendChild(anchor);
+
+            // 存储标题信息
+            this.headings.push({
+                element: heading,
+                id: heading.id,
+                text: heading.textContent.replace('🔗', '').trim(),
+                level: parseInt(heading.tagName.substr(1))
+            });
+
+            // 添加点击复制功能
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.copyToClipboard(`${window.location.origin}${window.location.pathname}#${heading.id}`);
+                this.scrollToHeading(heading);
+                history.replaceState(null, null, `#${heading.id}`);
+            });
+        });
+    }
+
+    // 生成右侧边栏目录
+    generateTOC() {
+        if (this.headings.length === 0) {
+            if (this.rightSidebar) {
+                this.rightSidebar.style.display = 'none';
+            }
+            return;
+        }
+
+        const tocList = document.createElement('ul');
         
-        // 递归处理所有节点
-        const walkNodes = (node) => {
-            const children = Array.from(node.childNodes);
-            children.forEach(child => {
-                if (child.nodeName !== 'PRE') { // 跳过代码块
-                    if (child.nodeType === Node.TEXT_NODE || child.nodeName === 'P') {
-                        processNode(child);
-                    } else {
-                        walkNodes(child);
+        this.headings.forEach(heading => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            
+            a.href = `#${heading.id}`;
+            a.textContent = this.truncateText(heading.text, 30); // 截断长标题
+            a.className = `toc-h${heading.level}`;
+            a.setAttribute('data-target', heading.id);
+            a.title = heading.text; // 完整标题作为tooltip
+            
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.scrollToHeading(heading.element);
+                history.replaceState(null, null, `#${heading.id}`);
+            });
+            
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+        
+        this.tocContainer.appendChild(tocList);
+    }
+
+    // 截断文本
+    truncateText(text, maxLength) {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+
+    // 设置滚动监听
+    setupScrollSpy() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const tocLink = this.tocContainer.querySelector(`a[data-target="${id}"]`);
+                
+                if (entry.isIntersecting) {
+                    // 移除之前的激活状态
+                    if (this.currentActive) {
+                        this.currentActive.classList.remove('active');
+                    }
+                    
+                    // 设置新的激活状态
+                    if (tocLink) {
+                        tocLink.classList.add('active');
+                        this.currentActive = tocLink;
+                        
+                        // 确保激活项在目录可视区域内
+                        tocLink.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'nearest',
+                            inline: 'nearest'
+                        });
                     }
                 }
             });
-        };
-        
-        walkNodes(content);
-        
-        // 处理代码块
-        content.querySelectorAll('pre code').forEach(block => {
-            const lines = block.textContent.split('\n');
-            block.innerHTML = lines
-                .map(line => `<span>${line}</span>`)
-                .join('\n');
+        }, {
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
         });
-    });
+
+        this.headings.forEach(heading => {
+            observer.observe(heading.element);
+        });
+    }
+
+
+    // 检查目录可见性
+    checkTocVisibility() {
+        // 如果标题数量少于3个，隐藏目录
+        if (this.headings.length < 3 && this.rightSidebar) {
+            this.rightSidebar.style.display = 'none';
+        }
+    }
+
+    // 处理初始哈希
+    handleInitialHash() {
+        if (window.location.hash) {
+            const targetId = window.location.hash.substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                // 等待页面完全加载后再滚动
+                setTimeout(() => {
+                    this.scrollToHeading(targetElement);
+                }, 500);
+            }
+        }
+    }
+
+
+    // 平滑滚动到标题
+    scrollToHeading(element) {
+        const offsetTop = element.offsetTop - 100; // 留出一些顶部空间
+        window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+        });
+    }
+
+    // 生成唯一ID
+    generateId(text, index) {
+        let id = text
+            .toLowerCase()
+            .replace(/[^\w\u4e00-\u9fa5\s-]/g, '') // 保留中文、英文、数字、空格、连字符
+            .replace(/\s+/g, '-') // 将空格替换为连字符
+            .replace(/-+/g, '-') // 合并多个连字符
+            .replace(/^-|-$/g, ''); // 移除首尾连字符
+
+        // 如果ID为空或太短，使用备用方案
+        if (!id || id.length < 2) {
+            id = `heading-${index + 1}`;
+        }
+
+        // 确保ID唯一性
+        let finalId = id;
+        let counter = 1;
+        while (document.getElementById(finalId)) {
+            finalId = `${id}-${counter}`;
+            counter++;
+        }
+
+        return finalId;
+    }
+
+    // 复制到剪贴板
+    async copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            this.showToast('链接已复制到剪贴板');
+        } catch (err) {
+            console.error('复制失败:', err);
+            this.showToast('复制失败，请手动复制');
+        }
+    }
+
+    // 显示提示消息
+    showToast(message) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease-out, slideOutRight 0.3s ease-in 2s forwards;
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 2500);
+    }
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', () => {
+    new RightSidebarToc();
+});
+
+// 添加动画样式
+const animationStyle = document.createElement('style');
+animationStyle.textContent = `
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+`;
+document.head.appendChild(animationStyle);
 </script>
 
 <!-- 在文章页面添加 Article 结构化数据 -->
@@ -428,4 +574,4 @@
     "url": "{{ current_url | safe }}"
 }
 </script>
-{% endblock content %} 
+{% endblock content %}

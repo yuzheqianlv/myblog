@@ -67,6 +67,7 @@
             --shadow-color: rgba(0, 0, 0, 0.1);
             --code-bg: #f6f8fa;
             --code-color: #476582;
+            --sidebar-width: 280px;
         }
         
         [data-theme="dark"] {
@@ -103,6 +104,121 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
+        /* 页面加载动画样式 */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-content {
+            text-align: center;
+            max-width: 300px;
+        }
+        
+        .loader-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+            animation: logoSpin 2s linear infinite;
+        }
+        
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 70% center;
+            transform: scale(1.1);
+        }
+        
+        @keyframes logoSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loader-text {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            animation: textPulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        .loader-progress {
+            width: 200px;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #5ccb91);
+            border-radius: 2px;
+            transition: width 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 添加光晕效果 */
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+        
+        @keyframes progressShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* 页面内容初始隐藏 */
+        .container {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .container.loaded {
+            opacity: 1;
+        }
+        
+        /* 深色主题下的加载器 */
+        [data-theme="dark"] .page-loader {
+            background: var(--bg-color);
+        }
+        
+        [data-theme="dark"] .loader-logo {
+            border-color: var(--primary-color);
+        }
+        
         /* 容器样式 */
         .container {
             display: flex;
@@ -112,7 +228,7 @@
         /* 侧边栏样式 */
         .sidebar {
             position: fixed;
-            width: 280px;
+            width: var(--sidebar-width);
             height: 100vh;
             background: var(--bg-color);
             border-right: 1px solid var(--border-color);
@@ -127,6 +243,112 @@
             justify-content: center;
             align-items: center;
         }
+
+        /* 右侧边栏样式 */
+        .right-sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-color);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .right-sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 右侧边栏内容 */
+        .toc-sidebar-content {
+            width: 100%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .toc-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            width: 100%;
+        }
+
+        .toc-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--title-color);
+            font-weight: 600;
+        }
+
+        .toc-nav {
+            flex: 0 1 auto;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            max-height: 60vh;
+            width: 100%;
+        }
+
+        .toc-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 目录链接样式 */
+        .toc-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-nav li {
+            margin: 0.5rem 0;
+        }
+
+        .toc-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .toc-nav a:hover {
+            color: var(--primary-color);
+            background: var(--hover-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .toc-nav a.active {
+            color: var(--primary-color);
+            background: rgba(66, 185, 131, 0.1);
+            border-left-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* 层级缩进 */
+        .toc-nav .toc-h2 { padding-left: 0.75rem; }
+        .toc-nav .toc-h3 { padding-left: 1.5rem; }
+        .toc-nav .toc-h4 { padding-left: 2.25rem; }
+        .toc-nav .toc-h5 { padding-left: 3rem; }
+        .toc-nav .toc-h6 { padding-left: 3.75rem; }
         
         /* 调整内容容器样式 */
         .sidebar-content {
@@ -224,12 +446,27 @@
         /* 主内容区域样式 */
         .content {
             flex: 1;
-            margin-left: 280px;
+            margin-left: var(--sidebar-width);
             padding: 2rem;
             min-height: 100vh;
         }
+
+        /* 有右侧边栏时的主内容区域 */
+        .content.has-right-sidebar {
+            margin-right: var(--sidebar-width);
+        }
         
         /* 响应式布局 */
+        @media (max-width: 1200px) {
+            .content.has-right-sidebar {
+                margin-right: 1rem;
+            }
+            
+            .right-sidebar {
+                width: calc(var(--sidebar-width) - 1rem);
+            }
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -243,6 +480,16 @@
             
             .content {
                 margin-left: 0;
+                margin-right: 0;
+            }
+
+            .content.has-right-sidebar {
+                margin-right: 0;
+            }
+            
+            /* 移动端隐藏右侧边栏 */
+            .right-sidebar {
+                display: none;
             }
         }
     </style>
@@ -260,15 +507,13 @@
                 </div>
                 <nav class="nav">
                     <ul>
+                        <li><a href="{{ get_url(path='search') }}">🔍 搜索</a></li>
                         <li><a href="{{ config.base_url }}">首页</a></li>
                         <li><a href="{{ get_url(path='blog') }}">文章</a></li>
                         <li><a href="{{ get_url(path='gallery') }}">图库</a></li>
                         <li><a href="{{ get_url(path='tags') }}">标签</a></li>
                         <li><a href="{{ get_url(path='about') }}">关于</a></li>
                         <li><a href="{{ get_url(path='friends') }}">友链</a></li>
-                        <li>
-                            <a href="javascript:void(0)" onclick="openSearch()">搜索</a>
-                        </li>
                         <li>
                             <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">
                                 <span class="theme-toggle-icon">🌓</span>
@@ -282,22 +527,51 @@
         <main class="content">
             {% block content %}{% endblock %}
         </main>
+
+        <!-- 右侧边栏 - 仅在文章页面显示 -->
+        {% if page and page.content %}
+        <aside class="right-sidebar" id="right-sidebar">
+            <div class="toc-sidebar-content">
+                <div class="toc-header">
+                    <h3 class="toc-title">目录</h3>
+                </div>
+                <nav class="toc-nav" id="toc-content">
+                    <!-- 目录将由JavaScript生成 -->
+                </nav>
+            </div>
+        </aside>
+        {% endif %}
     </div>
 
-    <!-- 搜索对话框 -->
-    <div id="search-dialog" class="search-dialog">
-        <div class="search-container">
-            <div class="search-header">
-                <input type="text" id="search-input" placeholder="输入关键词搜索...">
-                <button onclick="performSearch()">搜索</button>
+
+    <!-- 页面加载动画 -->
+    <div id="page-loader" class="page-loader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <img src="{{ get_url(path='shaonv.jpeg') | safe }}" alt="Loading...">
             </div>
-            <div id="search-results"></div>
+            <div class="loader-text">加载中...</div>
+            <div class="loader-progress">
+                <div class="progress-bar"></div>
+            </div>
         </div>
     </div>
 
     <!-- 脚本放在 body 末尾 -->
     <script src="{{ get_url(path='js/search.js') | safe }}"></script>
     <script>
+        // 右侧边栏管理
+        const rightSidebarManager = {
+            init() {
+                const rightSidebar = document.getElementById('right-sidebar');
+                const content = document.querySelector('.content');
+                
+                if (rightSidebar && content) {
+                    content.classList.add('has-right-sidebar');
+                }
+            }
+        };
+
         // 主题管理
         const themeManager = {
             // 获取系统主题偏好
@@ -356,8 +630,333 @@
             }
         };
 
-        // 初始化主题管理
-        document.addEventListener('DOMContentLoaded', () => themeManager.init());
+        // 初始化主题管理和右侧边栏
+        document.addEventListener('DOMContentLoaded', () => {
+            themeManager.init();
+            rightSidebarManager.init();
+        });
+        
+        // 智能页面加载管理
+        const pageLoader = {
+            init() {
+                this.loader = document.getElementById('page-loader');
+                this.container = document.querySelector('.container');
+                this.progressBar = document.querySelector('.progress-bar');
+                
+                // 加载状态跟踪
+                this.loadProgress = {
+                    dom: 0,
+                    images: 0,
+                    resources: 0,
+                    fonts: 0
+                };
+                
+                this.totalSteps = 4; // DOM, 图片, 资源, 字体
+                this.startTime = Date.now();
+                this.minShowTime = 300; // 最小显示时间降低到300ms
+                this.maxLoadTime = 2000; // 最大等待时间降低到2秒
+                
+                this.startSmartLoading();
+            },
+            
+            startSmartLoading() {
+                // 更新进度显示
+                this.updateProgress();
+                
+                // 设置安全超时
+                this.timeoutId = setTimeout(() => {
+                    console.log('页面加载超时，强制完成');
+                    this.forceComplete();
+                }, this.maxLoadTime);
+                
+                // 检查DOM状态
+                this.checkDOMLoaded();
+                
+                // 检查图片加载
+                this.checkImagesLoaded();
+                
+                // 检查资源加载
+                this.checkResourcesLoaded();
+                
+                // 检查字体加载
+                this.checkFontsLoaded();
+                
+                // 开始监听加载进度
+                this.startProgressMonitoring();
+            },
+            
+            // 更新进度条和检查完成状态
+            updateProgress() {
+                const totalProgress = Object.values(this.loadProgress).reduce((a, b) => a + b, 0);
+                const progressPercent = Math.min(100, (totalProgress / this.totalSteps) * 100);
+                
+                // 更新进度条
+                if (this.progressBar) {
+                    this.progressBar.style.width = progressPercent + '%';
+                }
+                
+                // 更新加载文本
+                this.updateLoadingText(progressPercent);
+                
+                // 如果所有内容都加载完成
+                if (progressPercent >= 100) {
+                    this.checkComplete();
+                }
+            },
+            
+            // 更新加载文本
+            updateLoadingText(percent) {
+                const loaderText = document.querySelector('.loader-text');
+                if (!loaderText) return;
+                
+                let text = '加载中...';
+                if (percent >= 90) {
+                    text = '即将完成...';
+                } else if (percent >= 70) {
+                    text = '加载资源中...';
+                } else if (percent >= 40) {
+                    text = '加载图片中...';
+                } else if (percent >= 20) {
+                    text = '准备页面...';
+                }
+                
+                loaderText.textContent = text;
+            },
+            
+            // 检查DOM加载状态
+            checkDOMLoaded() {
+                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                    this.loadProgress.dom = 1;
+                    this.updateProgress();
+                } else {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        this.loadProgress.dom = 1;
+                        this.updateProgress();
+                    });
+                }
+            },
+            
+            // 检查图片加载状态
+            checkImagesLoaded() {
+                const images = document.querySelectorAll('img');
+                
+                if (images.length === 0) {
+                    this.loadProgress.images = 1;
+                    this.updateProgress();
+                    return;
+                }
+                
+                let loadedCount = 0;
+                const totalImages = images.length;
+                
+                const updateImageProgress = () => {
+                    loadedCount++;
+                    this.loadProgress.images = loadedCount / totalImages;
+                    this.updateProgress();
+                };
+                
+                images.forEach(img => {
+                    if (img.complete && img.naturalHeight !== 0) {
+                        updateImageProgress();
+                    } else {
+                        img.addEventListener('load', updateImageProgress);
+                        img.addEventListener('error', updateImageProgress);
+                    }
+                });
+                
+                // 图片加载超时保护
+                setTimeout(() => {
+                    if (this.loadProgress.images < 1) {
+                        this.loadProgress.images = 1;
+                        this.updateProgress();
+                    }
+                }, 1000);
+            },
+            
+            // 检查关键资源加载状态
+            checkResourcesLoaded() {
+                const stylesheets = document.querySelectorAll('link[rel="stylesheet"]');
+                const scripts = document.querySelectorAll('script[src]');
+                const totalResources = stylesheets.length + scripts.length;
+                
+                if (totalResources === 0) {
+                    this.loadProgress.resources = 1;
+                    this.updateProgress();
+                    return;
+                }
+                
+                let loadedCount = 0;
+                
+                const updateResourceProgress = () => {
+                    loadedCount++;
+                    this.loadProgress.resources = loadedCount / totalResources;
+                    this.updateProgress();
+                };
+                
+                // 检查CSS
+                stylesheets.forEach(link => {
+                    if (link.sheet || link.readyState === 'complete') {
+                        updateResourceProgress();
+                    } else {
+                        link.addEventListener('load', updateResourceProgress);
+                        link.addEventListener('error', updateResourceProgress);
+                    }
+                });
+                
+                // 检查JavaScript
+                scripts.forEach(script => {
+                    if (script.readyState === 'loaded' || script.readyState === 'complete') {
+                        updateResourceProgress();
+                    } else {
+                        script.addEventListener('load', updateResourceProgress);
+                        script.addEventListener('error', updateResourceProgress);
+                    }
+                });
+                
+                // 资源加载超时保护
+                setTimeout(() => {
+                    if (this.loadProgress.resources < 1) {
+                        this.loadProgress.resources = 1;
+                        this.updateProgress();
+                    }
+                }, 800);
+            },
+            
+            // 检查字体加载状态
+            checkFontsLoaded() {
+                if ('fonts' in document) {
+                    document.fonts.ready.then(() => {
+                        this.loadProgress.fonts = 1;
+                        this.updateProgress();
+                    });
+                    
+                    // 字体加载超时
+                    setTimeout(() => {
+                        if (this.loadProgress.fonts < 1) {
+                            this.loadProgress.fonts = 1;
+                            this.updateProgress();
+                        }
+                    }, 500);
+                } else {
+                    // 不支持字体API，直接标记为已加载
+                    this.loadProgress.fonts = 1;
+                    this.updateProgress();
+                }
+            },
+            
+            // 开始进度监听
+            startProgressMonitoring() {
+                // 每100ms检查一次网络状态和性能
+                this.progressInterval = setInterval(() => {
+                    // 如果页面已经可见且基本内容已加载，可以考虑提前完成
+                    if (document.readyState === 'complete' && 
+                        this.loadProgress.dom === 1 && 
+                        Date.now() - this.startTime > this.minShowTime) {
+                        
+                        // 如果关键内容已加载，不必等待所有资源
+                        const criticalLoaded = this.loadProgress.dom + this.loadProgress.resources >= 1.5;
+                        if (criticalLoaded) {
+                            this.completeLoading();
+                        }
+                    }
+                }, 100);
+            },
+            
+            // 检查是否可以完成加载
+            checkComplete() {
+                const elapsed = Date.now() - this.startTime;
+                
+                // 确保最小显示时间
+                if (elapsed < this.minShowTime) {
+                    setTimeout(() => this.completeLoading(), this.minShowTime - elapsed);
+                } else {
+                    this.completeLoading();
+                }
+            },
+            
+            // 强制完成加载
+            forceComplete() {
+                clearTimeout(this.timeoutId);
+                clearInterval(this.progressInterval);
+                this.completeLoading();
+            },
+            
+            // 完成加载
+            completeLoading() {
+                clearTimeout(this.timeoutId);
+                clearInterval(this.progressInterval);
+                
+                if (this.loader) {
+                    this.hideLoader();
+                }
+            },
+            
+            hideLoader() {
+                this.loader.classList.add('hidden');
+                this.container.classList.add('loaded');
+                
+                // 完全移除加载器
+                setTimeout(() => {
+                    if (this.loader && this.loader.parentNode) {
+                        this.loader.remove();
+                    }
+                }, 500);
+                
+                // 触发页面入场动画
+                this.triggerPageAnimations();
+            },
+            
+            triggerPageAnimations() {
+                // 触发侧边栏动画
+                const sidebar = document.querySelector('.sidebar');
+                if (sidebar) {
+                    sidebar.style.animation = 'slideInLeft 0.6s ease-out';
+                }
+                
+                // 触发内容区域动画
+                const content = document.querySelector('.content');
+                if (content) {
+                    content.style.animation = 'slideInRight 0.6s ease-out 0.2s both';
+                }
+            }
+        };
+        
+        // 添加页面入场动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInLeft {
+                from {
+                    transform: translateX(-100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(50px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 页面加载时立即初始化
+        // 尽可能早地开始加载动画
+        if (document.readyState === 'loading') {
+            // 页面还在加载，立即开始
+            pageLoader.init();
+        } else {
+            // DOM已经准备好，立即初始化
+            pageLoader.init();
+        }
     </script>
 </body>
 </html>

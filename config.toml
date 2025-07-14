@@ -3,6 +3,9 @@ title = "千虑者"
 description = "(✿╹◡╹) 智者千虑必有一失,愚者千虑必有一得(╹◡╹✿)"
 default_language = "zh"
 
+# 启用搜索索引构建
+build_search_index = true
+
 # 标签分类配置
 taxonomies = [
     {name = "tags", feed = true, rss = true}
@@ -36,6 +39,14 @@ sitemap_filename = "sitemap.xml"
 
 # 添加自定义配置
 enable_line_numbers = true
+
+# 搜索配置
+[search]
+index_format = "fuse_json"              # 中文推荐使用Fuse.js
+include_title = true
+include_content = true  
+include_description = true
+truncate_content_length = 1500          # 适合中文博客长度
 
 [extra.theme]
 auto_dark = true  # 启用自动夜间模式

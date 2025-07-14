@@ -135,6 +135,24 @@ body {
     color: var(--link-color);
 }
 
+/* 搜索按钮特殊样式 */
+.nav li:first-child a {
+    background: linear-gradient(135deg, var(--primary-color), #5ccb91);
+    color: white;
+    border-radius: 20px;
+    font-weight: 600;
+    transform: translateY(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 122, 204, 0.3);
+}
+
+.nav li:first-child a:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 122, 204, 0.4);
+    background: linear-gradient(135deg, #0056b3, #4ba87d);
+}
+
 /* 内容区域 */
 .content {
     margin-left: var(--sidebar-width);
@@ -190,6 +208,7 @@ body {
         padding: 1rem;
         border-right: none;
         border-bottom: 1px solid var(--border-color);
+        animation: mobileSlideIn 0.6s ease-out;
     }
     
     .profile {
@@ -198,6 +217,120 @@ body {
     
     .nav li {
         margin: 0.5rem 0;
+        opacity: 0;
+        animation: navItemFadeIn 0.4s ease-out forwards;
+    }
+    
+    .nav li:nth-child(1) { animation-delay: 0.1s; }
+    .nav li:nth-child(2) { animation-delay: 0.2s; }
+    .nav li:nth-child(3) { animation-delay: 0.3s; }
+    .nav li:nth-child(4) { animation-delay: 0.4s; }
+    .nav li:nth-child(5) { animation-delay: 0.5s; }
+    .nav li:nth-child(6) { animation-delay: 0.6s; }
+    .nav li:nth-child(7) { animation-delay: 0.7s; }
+    .nav li:nth-child(8) { animation-delay: 0.8s; }
+    
+    /* 移动端内容区域动画 */
+    .content {
+        margin-left: 0;
+        animation: mobileContentSlideIn 0.6s ease-out 0.3s both;
+    }
+}
+
+/* 移动端动画 */
+@keyframes mobileSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes navItemFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes mobileContentSlideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    .post-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .post-item:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+    
+    .tag:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .tag:active {
+        transform: scale(0.95);
+        background: var(--hover-color);
+    }
+    
+    .avatar:hover {
+        transform: none;
+    }
+    
+    .avatar:active {
+        transform: scale(0.95);
+    }
+}
+
+/* 高分辨率设备优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .avatar {
+        background-size: 200%;
+    }
+}
+
+/* 小屏幕设备进一步优化 */
+@media screen and (max-width: 480px) {
+    .content {
+        padding: 20px;
+    }
+    
+    .page-title {
+        font-size: 1.75rem;
+    }
+    
+    .post-title a {
+        font-size: 1.25rem;
+    }
+    
+    /* 减少动画复杂度 */
+    .post-item::before {
+        display: none;
+    }
+    
+    .post-item:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px var(--shadow-color);
     }
 }
 
@@ -678,6 +811,74 @@ pre code {
     }
 }
 
+/* 性能优化 */
+.post-item,
+.tag,
+.avatar,
+.pagination a {
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* GPU加速 */
+.post-item::before,
+.tag::before,
+.pagination a::before {
+    transform: translateZ(0);
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* 焦点可见性 */
+.post-title a:focus,
+.tag:focus,
+.nav a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* 动画性能优化 */
+@media (prefers-reduced-motion: no-preference) {
+    /* 只在用户没有禁用动画时才应用复杂动画 */
+    .post-item {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    border-color 0.3s ease;
+    }
+    
+    .post-title a {
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+    
+    .tag {
+        transition: all 0.3s ease;
+    }
+}
+
 /* 在文件末尾添加深色主题样式 */
 [data-theme="dark"] {
     /* 搜索对话框深色样式 */
@@ -717,5 +918,16 @@ pre code {
         color: var(--code-color);
     }
 
-    /* 其他深色样式... */
+    /* 滚动条深色样式 */
+    ::-webkit-scrollbar-track {
+        background: var(--bg-color);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary-color);
+    }
 }
