@@ -164,12 +164,14 @@ const fuseSearch = new FuseSearch();
 // 初始化搜索功能
 async function initFuseSearch() {
     const searchInput = document.getElementById("search");
-    const searchResults = document.querySelector(".search-results");
+    const searchResults = document.getElementById("search-results");
     const searchResultsItems = document.querySelector(".search-results__items");
+    const searchStats = document.getElementById("search-stats");
+    const searchEmpty = document.getElementById("search-empty");
     const MAX_ITEMS = 10;
 
     if (!searchInput || !searchResults || !searchResultsItems) {
-        console.warn('搜索元素未找到');
+        console.warn('搜索元素未找到，可能不在搜索页面');
         return;
     }
 
@@ -196,6 +198,8 @@ async function initFuseSearch() {
         // 空搜索隐藏结果
         if (query === "") {
             searchResults.style.display = "none";
+            searchEmpty.style.display = "none";
+            if (searchStats) searchStats.style.display = "none";
             return;
         }
 
@@ -213,8 +217,22 @@ async function initFuseSearch() {
         searchResultsItems.innerHTML = '';
         
         if (results.length === 0) {
-            searchResultsItems.innerHTML = '<li class="search-results__no-results">未找到相关内容</li>';
+            searchResults.style.display = "none";
+            searchEmpty.style.display = "block";
             return;
+        }
+        
+        // 隐藏空状态，显示结果
+        searchEmpty.style.display = "none";
+        searchResults.style.display = "block";
+        
+        // 显示搜索统计
+        if (searchStats) {
+            const searchCount = document.querySelector('.search-count');
+            if (searchCount) {
+                searchCount.textContent = `找到 ${results.length} 条结果`;
+            }
+            searchStats.style.display = "block";
         }
 
         const fragment = document.createDocumentFragment();
@@ -283,6 +301,37 @@ async function initFuseSearch() {
         if (searchInput.value.trim() !== '') {
             searchResults.style.display = "block";
         }
+    });
+    
+    // 清除搜索功能
+    const searchClear = document.getElementById('search-clear');
+    if (searchClear) {
+        searchInput.addEventListener('input', function() {
+            if (searchInput.value.trim()) {
+                searchClear.style.display = 'block';
+            } else {
+                searchClear.style.display = 'none';
+            }
+        });
+        
+        searchClear.addEventListener('click', function() {
+            searchInput.value = '';
+            searchClear.style.display = 'none';
+            searchResults.style.display = 'none';
+            searchEmpty.style.display = 'none';
+            if (searchStats) searchStats.style.display = 'none';
+            searchInput.focus();
+        });
+    }
+    
+    // 建议标签点击功能
+    const suggestionTags = document.querySelectorAll('.suggestion-tag');
+    suggestionTags.forEach(tag => {
+        tag.addEventListener('click', function() {
+            const query = this.dataset.query;
+            searchInput.value = query;
+            performSearch();
+        });
     });
 
     console.log('Fuse搜索功能初始化完成');

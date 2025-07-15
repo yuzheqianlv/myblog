@@ -49,6 +49,12 @@
     <link rel="canonical" href="{{ current_url | safe }}">
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="{{ get_url(path='rss.xml') | safe }}">
     
+    <!-- 语法高亮样式表 - 支持暗色/亮色主题 -->
+    {% if config.markdown.highlight_code and config.markdown.highlight_theme == "css" %}
+    <link rel="stylesheet" type="text/css" href="{{ get_url(path='syntax-theme-light.css') | safe }}" media="(prefers-color-scheme: light)" />
+    <link rel="stylesheet" type="text/css" href="{{ get_url(path='syntax-theme-dark.css') | safe }}" media="(prefers-color-scheme: dark)" />
+    {% endif %}
+    
     <!-- Theme Support -->
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
@@ -56,32 +62,104 @@
     
     <style>
         :root {
+            /* 基础颜色 */
             --bg-color: #ffffff;
             --text-color: #333333;
             --title-color: #1a1a1a;
-            --border-color: #eaeaea;
-            --link-color: #42b983;
-            --primary-color: #42b983;
             --secondary-color: #718096;
+            --muted-color: #9ca3af;
+            
+            /* 边框和分割线 */
+            --border-color: #eaeaea;
+            --divider-color: #f3f4f6;
+            
+            /* 主题色 */
+            --primary-color: #42b983;
+            --primary-dark: #369870;
+            --link-color: #42b983;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+            
+            /* 交互状态 */
             --hover-color: rgba(66, 185, 131, 0.1);
+            --focus-color: rgba(66, 185, 131, 0.2);
+            --active-color: rgba(66, 185, 131, 0.15);
+            
+            /* 阴影 */
             --shadow-color: rgba(0, 0, 0, 0.1);
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.1);
+            
+            /* 代码高亮 */
             --code-bg: #f6f8fa;
             --code-color: #476582;
+            --code-border: #e1e8ed;
+            --inline-code-bg: #f1f3f4;
+            --inline-code-color: #d63384;
+            --code-comment: #6a737d;
+            --code-keyword: #d73a49;
+            --code-string: #032f62;
+            --code-number: #005cc5;
+            --code-function: #6f42c1;
+            
+            /* 布局 */
             --sidebar-width: 280px;
+            --max-content-width: 1200px;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            
+            /* 过渡动画 */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
         }
         
         [data-theme="dark"] {
+            /* 基础颜色 */
             --bg-color: #1a1a1a;
             --text-color: #e0e0e0;
             --title-color: #ffffff;
-            --border-color: #333333;
-            --link-color: #5ccb91;
-            --primary-color: #5ccb91;
             --secondary-color: #a0aec0;
+            --muted-color: #6b7280;
+            
+            /* 边框和分割线 */
+            --border-color: #333333;
+            --divider-color: #2d3748;
+            
+            /* 主题色 */
+            --primary-color: #5ccb91;
+            --primary-dark: #4db380;
+            --link-color: #5ccb91;
+            --success-color: #34d399;
+            --warning-color: #fbbf24;
+            --error-color: #f87171;
+            --info-color: #60a5fa;
+            
+            /* 交互状态 */
             --hover-color: rgba(92, 203, 145, 0.1);
+            --focus-color: rgba(92, 203, 145, 0.2);
+            --active-color: rgba(92, 203, 145, 0.15);
+            
+            /* 阴影 */
             --shadow-color: rgba(0, 0, 0, 0.3);
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.3);
+            
+            /* 代码高亮 */
             --code-bg: #2d2d2d;
             --code-color: #e2e8f0;
+            --code-border: #4a5568;
+            --inline-code-bg: #2d3748;
+            --inline-code-color: #fbb6ce;
+            --code-comment: #718096;
+            --code-keyword: #f687b3;
+            --code-string: #9ae6b4;
+            --code-number: #90cdf4;
+            --code-function: #d6bcfa;
         }
         
         /* 主题切换按钮样式 */
@@ -102,6 +180,163 @@
         /* 添加平滑过渡 */
         body {
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* 代码块样式 - 基于Zola文档建议 */
+        pre {
+            padding: 1rem;
+            overflow: auto;
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: var(--border-radius);
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+        
+        /* 带行号的代码块 */
+        pre[data-linenos] {
+            padding: 1rem 0;
+        }
+        
+        pre table td {
+            padding: 0;
+        }
+        
+        /* 行号单元格 */
+        pre table td:nth-of-type(1) {
+            text-align: center;
+            vertical-align: top;
+            user-select: none;
+            color: var(--muted-color);
+            font-style: italic;
+            padding-right: 1rem;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        /* 代码内容单元格 */
+        pre table td:nth-of-type(2) {
+            padding-left: 1rem;
+            width: 100%;
+        }
+        
+        /* 高亮行 */
+        pre mark {
+            display: block;
+            background-color: var(--hover-color);
+            color: inherit;
+            padding: 0 0.5rem;
+            margin: 0 -0.5rem;
+        }
+        
+        pre table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        /* 内联代码 */
+        code:not(pre code) {
+            background: var(--inline-code-bg);
+            color: var(--inline-code-color);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+        
+        /* 代码块中的代码不应用内联样式 */
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+        }
+        
+        /* 代码块主题适配 */
+        .theme-dark pre {
+            background: var(--code-bg);
+            border-color: var(--code-border);
+        }
+        
+        .theme-light pre {
+            background: #f6f8fa;
+            border-color: #e1e8ed;
+        }
+        
+        /* 响应式代码块 */
+        @media (max-width: 768px) {
+            pre {
+                font-size: 0.8rem;
+                padding: 0.8rem;
+                margin: 1rem -1rem;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            
+            pre[data-linenos] {
+                padding: 0.8rem 0;
+            }
+            
+            pre table td:nth-of-type(1) {
+                padding-right: 0.5rem;
+            }
+            
+            pre table td:nth-of-type(2) {
+                padding-left: 0.5rem;
+            }
+        }
+        
+        /* 主题切换通知样式 */
+        .theme-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 12px 16px;
+            box-shadow: var(--shadow-medium);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .theme-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        .notification-text {
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        /* 移动端适配通知 */
+        @media (max-width: 768px) {
+            .theme-notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100%);
+                border-radius: var(--border-radius-lg);
+            }
+            
+            .theme-notification.show {
+                transform: translateY(0);
+            }
         }
         
         /* 页面加载动画样式 */
@@ -467,15 +702,123 @@
             }
         }
 
+        /* 侧边栏切换按钮样式 */
+        .sidebar-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+            backdrop-filter: blur(10px);
+        }
+        
+        .sidebar-toggle:hover {
+            background: var(--hover-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--primary-color);
+        }
+        
+        .sidebar-toggle:active {
+            transform: translateY(-1px) scale(0.95);
+        }
+        
+        .sidebar-toggle:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
+        /* 汉堡图标线条 */
+        .hamburger {
+            width: 18px;
+            height: 2px;
+            background: var(--text-color);
+            border-radius: 1px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        
+        /* 激活状态下的X图标 */
+        .sidebar-toggle.active .hamburger:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+        
+        .sidebar-toggle.active .hamburger:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        
+        .sidebar-toggle.active .hamburger:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+        
+        /* 侧边栏遮罩层 */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .sidebar-toggle {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .sidebar-toggle:hover {
+                transform: none;
+                box-shadow: var(--shadow-medium);
+            }
+            
+            .sidebar-toggle:active {
+                transform: scale(0.95);
+                background: var(--active-color);
+            }
+        }
+
         @media (max-width: 768px) {
+            /* 显示侧边栏切换按钮 */
+            .sidebar-toggle {
+                display: flex;
+            }
+            
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
                 z-index: 1000;
+                box-shadow: none;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: var(--shadow-heavy);
             }
             
             .content {
@@ -492,9 +835,33 @@
                 display: none;
             }
         }
+        
+        /* 超小屏幕适配 */
+        @media (max-width: 480px) {
+            .sidebar-toggle {
+                top: 0.75rem;
+                left: 0.75rem;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .hamburger {
+                width: 16px;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="{% block body_class %}{% endblock body_class %}">
+    <!-- 移动端侧边栏切换按钮 -->
+    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="打开侧边栏">
+        <span class="hamburger"></span>
+        <span class="hamburger"></span>
+        <span class="hamburger"></span>
+    </button>
+    
+    <!-- 侧边栏遮罩层 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    
     <div class="container">
         <aside class="sidebar">
             <div class="sidebar-content">
@@ -558,8 +925,128 @@
     </div>
 
     <!-- 脚本放在 body 末尾 -->
-    <script src="{{ get_url(path='js/search.js') | safe }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+    <script src="{{ get_url(path='js/fuse-search.js') | safe }}"></script>
     <script>
+        // 左侧边栏管理
+        const sidebarManager = {
+            init() {
+                this.sidebar = document.querySelector('.sidebar');
+                this.toggle = document.getElementById('sidebar-toggle');
+                this.overlay = document.getElementById('sidebar-overlay');
+                this.isOpen = false;
+                
+                if (this.toggle) {
+                    this.toggle.addEventListener('click', () => this.toggleSidebar());
+                }
+                
+                if (this.overlay) {
+                    this.overlay.addEventListener('click', () => this.closeSidebar());
+                }
+                
+                // ESC键关闭侧边栏
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.isOpen) {
+                        this.closeSidebar();
+                    }
+                });
+                
+                // 窗口大小变化时处理侧边栏状态
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        if (window.innerWidth > 768 && this.isOpen) {
+                            this.closeSidebar();
+                        }
+                    }, 100);
+                });
+                
+                // 阻止侧边栏内部点击事件冒泡
+                if (this.sidebar) {
+                    this.sidebar.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                    });
+                }
+                
+                // 添加触摸滑动支持
+                this.initTouchSupport();
+            },
+            
+            toggleSidebar() {
+                if (this.isOpen) {
+                    this.closeSidebar();
+                } else {
+                    this.openSidebar();
+                }
+            },
+            
+            openSidebar() {
+                this.isOpen = true;
+                this.sidebar?.classList.add('active');
+                this.overlay?.classList.add('active');
+                this.toggle?.classList.add('active');
+                this.toggle?.setAttribute('aria-label', '关闭侧边栏');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            },
+            
+            closeSidebar() {
+                this.isOpen = false;
+                this.sidebar?.classList.remove('active');
+                this.overlay?.classList.remove('active');
+                this.toggle?.classList.remove('active');
+                this.toggle?.setAttribute('aria-label', '打开侧边栏');
+                document.body.style.overflow = ''; // 恢复滚动
+            },
+            
+            // 初始化触摸滑动支持
+            initTouchSupport() {
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                
+                // 从左边缘滑动打开侧边栏
+                document.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    // 只有在左边缘20px内开始滑动才触发
+                    if (startX < 20 && !this.isOpen) {
+                        isDragging = true;
+                    } else if (this.isOpen && startX > 280) {
+                        // 从侧边栏外部开始滑动，准备关闭
+                        isDragging = true;
+                    }
+                }, { passive: true });
+                
+                document.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.touches[0].clientX;
+                    
+                    // 防止页面滚动
+                    if (Math.abs(currentX - startX) > 10) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+                
+                document.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    
+                    const deltaX = currentX - startX;
+                    
+                    if (!this.isOpen && deltaX > 50) {
+                        // 向右滑动超过50px，打开侧边栏
+                        this.openSidebar();
+                    } else if (this.isOpen && deltaX < -50) {
+                        // 向左滑动超过50px，关闭侧边栏
+                        this.closeSidebar();
+                    }
+                    
+                    isDragging = false;
+                    startX = 0;
+                    currentX = 0;
+                }, { passive: true });
+            }
+        };
+
         // 右侧边栏管理
         const rightSidebarManager = {
             init() {
@@ -572,7 +1059,7 @@
             }
         };
 
-        // 主题管理
+        // 增强主题管理系统
         const themeManager = {
             // 获取系统主题偏好
             getSystemTheme() {
@@ -582,8 +1069,8 @@
             // 获取当前时间是否在夜间模式范围内
             isNightTime() {
                 const hour = new Date().getHours();
-                const startHour = {% if config.extra.theme.dark_mode_time %}{{ config.extra.theme.dark_mode_time.start | default(value=22) }}{% else %}22{% endif %};
-                const endHour = {% if config.extra.theme.dark_mode_time %}{{ config.extra.theme.dark_mode_time.end | default(value=6) }}{% else %}6{% endif %};
+                const startHour = {% if config.extra.theme.dark_mode_time %}{{ config.extra.theme.dark_mode_time.start | default(value=19) }}{% else %}19{% endif %};
+                const endHour = {% if config.extra.theme.dark_mode_time %}{{ config.extra.theme.dark_mode_time.end | default(value=7) }}{% else %}7{% endif %};
                 return hour >= startHour || hour < endHour;
             },
 
@@ -597,12 +1084,63 @@
                 document.documentElement.setAttribute('data-theme', theme);
                 localStorage.setItem('theme', theme);
                 this.updateThemeIcon(theme);
+                this.updateSyntaxTheme(theme);
+                this.updateMetaThemeColor(theme);
+                
+                // 触发主题变化事件
+                document.dispatchEvent(new CustomEvent('themechange', { 
+                    detail: { theme: theme } 
+                }));
             },
 
             // 更新主题图标
             updateThemeIcon(theme) {
                 const icon = document.querySelector('.theme-toggle-icon');
-                icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+                if (icon) {
+                    icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+                    icon.setAttribute('aria-label', theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式');
+                }
+            },
+
+            // 更新语法高亮主题
+            updateSyntaxTheme(theme) {
+                const lightTheme = document.querySelector('link[href*="syntax-theme-light"]');
+                const darkTheme = document.querySelector('link[href*="syntax-theme-dark"]');
+                
+                if (lightTheme && darkTheme) {
+                    if (theme === 'dark') {
+                        lightTheme.disabled = true;
+                        darkTheme.disabled = false;
+                        lightTheme.media = 'not all';
+                        darkTheme.media = 'all';
+                    } else {
+                        lightTheme.disabled = false;
+                        darkTheme.disabled = true;
+                        lightTheme.media = 'all';
+                        darkTheme.media = 'not all';
+                    }
+                }
+                
+                // 为代码块添加主题相关的类
+                const codeBlocks = document.querySelectorAll('pre, code[class*="language-"]');
+                codeBlocks.forEach(block => {
+                    block.classList.remove('theme-light', 'theme-dark');
+                    block.classList.add(`theme-${theme}`);
+                });
+                
+                // 更新内联代码样式
+                document.documentElement.style.setProperty('--current-code-bg', 
+                    theme === 'dark' ? 'var(--code-bg)' : '#f6f8fa');
+                document.documentElement.style.setProperty('--current-code-color', 
+                    theme === 'dark' ? 'var(--code-color)' : '#476582');
+            },
+
+            // 更新meta主题色
+            updateMetaThemeColor(theme) {
+                const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+                if (themeColorMeta) {
+                    themeColorMeta.setAttribute('content', theme === 'dark' ? '#1a1a1a' : '#ffffff');
+                }
             },
 
             // 初始化主题
@@ -622,17 +1160,74 @@
                 });
 
                 // 监听主题切换按钮点击
-                document.getElementById('theme-toggle').addEventListener('click', () => {
-                    const currentTheme = document.documentElement.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    this.setTheme(newTheme);
+                const themeToggle = document.getElementById('theme-toggle');
+                if (themeToggle) {
+                    themeToggle.addEventListener('click', () => {
+                        const currentTheme = document.documentElement.getAttribute('data-theme');
+                        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                        this.setTheme(newTheme);
+                        this.showThemeChangeNotification(newTheme);
+                        
+                        // 添加切换动画效果
+                        document.body.style.transition = 'background-color var(--transition-normal), color var(--transition-normal)';
+                        setTimeout(() => {
+                            document.body.style.transition = '';
+                        }, 300);
+                    });
+                }
+
+                // 键盘快捷键支持 (Ctrl/Cmd + Shift + L)
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'L') {
+                        e.preventDefault();
+                        const currentTheme = document.documentElement.getAttribute('data-theme');
+                        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                        this.setTheme(newTheme);
+                        this.showThemeChangeNotification(newTheme);
+                    }
                 });
+            },
+
+            // 显示主题切换通知
+            showThemeChangeNotification(theme) {
+                // 移除现有通知
+                const existingNotification = document.querySelector('.theme-notification');
+                if (existingNotification) {
+                    existingNotification.remove();
+                }
+                
+                // 创建新通知
+                const notification = document.createElement('div');
+                notification.className = 'theme-notification';
+                notification.innerHTML = `
+                    <span class="notification-icon">${theme === 'dark' ? '🌙' : '☀️'}</span>
+                    <span class="notification-text">已切换到${theme === 'dark' ? '暗色' : '亮色'}模式</span>
+                `;
+                
+                // 添加到页面
+                document.body.appendChild(notification);
+                
+                // 显示动画
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                // 3秒后自动隐藏
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }, 2000);
             }
         };
 
-        // 初始化主题管理和右侧边栏
+        // 初始化主题管理和侧边栏
         document.addEventListener('DOMContentLoaded', () => {
             themeManager.init();
+            sidebarManager.init();
             rightSidebarManager.init();
         });
         

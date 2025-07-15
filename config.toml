@@ -14,6 +14,14 @@ taxonomies = [
 [markdown]
 # 启用语法高亮
 highlight_code = true
+highlight_theme = "css"  # 使用CSS类而非内联样式，支持主题切换
+
+# 生成语法高亮CSS文件，支持暗色/亮色主题
+highlight_themes_css = [
+  { theme = "base16-ocean-dark", filename = "syntax-theme-dark.css" },
+  { theme = "base16-ocean-light", filename = "syntax-theme-light.css" },
+]
+
 # 启用表格支持
 render_emoji = true
 # 启用脚注

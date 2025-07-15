@@ -1,106 +1,259 @@
 {% extends "base.html" %}
 
 {% block title %}搜索 - {{ config.title }}{% endblock title %}
+{% block description %}搜索博客文章、标签和分类，快速找到你感兴趣的内容{% endblock description %}
 
 {% block content %}
 <div class="search-page">
-    <h1>搜索博客</h1>
-    
-    <div class="search-container">
-        <input 
-            type="text" 
-            id="search" 
-            placeholder="输入关键词搜索文章、标签、分类..."
-            autocomplete="off"
-            spellcheck="false"
-        >
-        
-        <div class="search-results" style="display: none;">
-            <ul class="search-results__items"></ul>
-        </div>
+    <div class="search-header">
+        <h1 class="search-title">
+            <span class="search-icon">🔍</span>
+            搜索博客
+        </h1>
+        <p class="search-subtitle">探索博客中的精彩文章</p>
     </div>
     
-    <div class="search-tips">
-        <h3>搜索技巧</h3>
-        <ul>
-            <li>输入多个关键词可以获得更精确的结果</li>
-            <li>支持搜索文章标题、内容和描述</li>
-            <li>搜索结果按相关度排序</li>
-        </ul>
+    <div class="search-main">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <svg class="search-input-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input 
+                    type="text" 
+                    id="search" 
+                    placeholder="搜索文章标题、内容、标签..."
+                    autocomplete="off"
+                    spellcheck="false"
+                    class="search-input"
+                >
+                <button class="search-clear" id="search-clear" aria-label="清除搜索" style="display: none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="search-stats" id="search-stats" style="display: none;">
+                <span class="search-count"></span>
+                <span class="search-time"></span>
+            </div>
+            
+            <div class="search-results" id="search-results" style="display: none;">
+                <div class="search-results-header">
+                    <h3>搜索结果</h3>
+                </div>
+                <ul class="search-results__items"></ul>
+                <div class="search-results-footer" id="search-results-footer" style="display: none;">
+                    <button class="load-more-btn" id="load-more">加载更多结果</button>
+                </div>
+            </div>
+            
+            <div class="search-empty" id="search-empty" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <h3>未找到相关内容</h3>
+                <p>尝试使用不同的关键词或检查拼写</p>
+                <div class="search-suggestions">
+                    <p>搜索建议：</p>
+                    <div class="suggestion-tags">
+                        <button class="suggestion-tag" data-query="技术">技术</button>
+                        <button class="suggestion-tag" data-query="生活">生活</button>
+                        <button class="suggestion-tag" data-query="思考">思考</button>
+                        <button class="suggestion-tag" data-query="教程">教程</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-shortcuts">
+            <h3>快捷搜索</h3>
+            <div class="shortcut-grid">
+                <button class="shortcut-item" data-query="最新文章">
+                    <span class="shortcut-icon">📝</span>
+                    <span class="shortcut-label">最新文章</span>
+                </button>
+                <button class="shortcut-item" data-query="技术分享">
+                    <span class="shortcut-icon">💻</span>
+                    <span class="shortcut-label">技术分享</span>
+                </button>
+                <button class="shortcut-item" data-query="生活随笔">
+                    <span class="shortcut-icon">✍️</span>
+                    <span class="shortcut-label">生活随笔</span>
+                </button>
+                <button class="shortcut-item" data-query="教程指南">
+                    <span class="shortcut-icon">📚</span>
+                    <span class="shortcut-label">教程指南</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
-/* 搜索页面样式 */
+/* 搜索页面样式 - 无背景板设计 */
 .search-page {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 0;
+}
+
+/* 搜索头部 */
+.search-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.search-title {
+    font-size: 2.5rem;
+    margin: 0 0 1rem;
+    color: var(--title-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-weight: 700;
+}
+
+.search-icon {
+    font-size: 2rem;
+}
+
+.search-subtitle {
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* 搜索主体 */
+.search-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
 }
 
 .search-container {
     position: relative;
-    margin-bottom: 2rem;
 }
 
-#search {
+/* 搜索输入框 */
+.search-input-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+    z-index: 2;
+}
+
+.search-input {
     width: 100%;
-    padding: 1rem 1.5rem;
+    padding: 1rem 3.5rem 1rem 3rem;
     font-size: 1.1rem;
     border: 2px solid var(--border-color);
-    border-radius: 50px;
+    border-radius: 30px;
     outline: none;
     transition: all 0.3s ease;
     background: var(--bg-color);
     color: var(--text-color);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-#search:focus {
+.search-input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1);
+    box-shadow: 0 4px 20px var(--focus-color);
+    transform: translateY(-2px);
 }
 
-.search-results {
+.search-clear {
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    max-height: 500px;
-    overflow-y: auto;
-    z-index: 1000;
-    margin-top: 0.5rem;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear:hover {
+    background: var(--hover-color);
+    color: var(--text-color);
+}
+
+/* 搜索统计 */
+.search-stats {
+    text-align: center;
+    margin: 1rem 0;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.search-count {
+    margin-right: 1rem;
+}
+
+/* 搜索结果 */
+.search-results {
+    margin-top: 2rem;
+}
+
+.search-results-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.search-results-header h3 {
+    margin: 0;
+    color: var(--title-color);
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
 .search-results__items {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .search-results__item {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.2s ease;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: var(--bg-color);
 }
 
 .search-results__item:hover {
-    background-color: var(--hover-color);
-}
-
-.search-results__item:last-child {
-    border-bottom: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transform: translateY(-2px);
 }
 
 .search-results__item a {
     display: block;
     font-weight: 600;
+    font-size: 1.1rem;
     color: var(--primary-color);
     text-decoration: none;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
 }
 
 .search-results__item a:hover {
@@ -108,89 +261,469 @@
 }
 
 .search-results__teaser {
-    color: var(--secondary-color);
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
 }
 
 .search-results__teaser mark {
-    background-color: #fff3cd;
-    padding: 0.1em 0.2em;
-    border-radius: 2px;
+    background: linear-gradient(120deg, var(--primary-color) 0%, var(--primary-color) 100%);
+    background-size: 100% 0.2em;
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    color: var(--primary-color);
     font-weight: 600;
+    padding: 0;
 }
 
 .search-results__url {
-    font-size: 0.9rem;
-    color: #28a745;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    opacity: 0.8;
 }
 
 .search-results__score {
     font-size: 0.8rem;
     color: var(--muted-color);
+    float: right;
 }
 
-.search-results__loading,
-.search-results__no-results {
-    padding: 1rem 1.5rem;
+/* 空状态 */
+.search-empty {
     text-align: center;
+    padding: 3rem 2rem;
     color: var(--secondary-color);
-    font-style: italic;
 }
 
-.search-results__more-info {
-    padding: 0.5rem 1.5rem;
-    background-color: var(--hover-color);
-    border-top: 1px solid var(--border-color);
-    font-size: 0.9rem;
-    color: var(--secondary-color);
-    text-align: center;
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
 }
 
-/* 搜索技巧样式 */
-.search-tips {
-    background-color: var(--hover-color);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 2rem;
+.search-empty h3 {
+    color: var(--title-color);
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
 }
 
-.search-tips h3 {
-    margin-top: 0;
+.search-empty p {
+    margin: 0 0 2rem;
+    font-size: 1rem;
+}
+
+.search-suggestions p {
+    margin-bottom: 1rem;
+    font-weight: 500;
     color: var(--text-color);
 }
 
-.search-tips ul {
-    margin-bottom: 0;
+.suggestion-tags {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
-.search-tips li {
-    margin-bottom: 0.5rem;
-    color: var(--secondary-color);
+.suggestion-tag {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.suggestion-tag:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* 快捷搜索 */
+.search-shortcuts h3 {
+    margin: 0 0 1.5rem;
+    color: var(--title-color);
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.shortcut-item:hover {
+    border-color: var(--primary-color);
+    background: var(--hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.shortcut-icon {
+    font-size: 1.5rem;
+}
+
+.shortcut-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* 加载更多按钮 */
+.search-results-footer {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.load-more-btn {
+    padding: 0.75rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.load-more-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-    .search-page {
-        padding: 1rem 0.5rem;
+    .search-title {
+        font-size: 2rem;
     }
     
-    #search {
+    .search-subtitle {
         font-size: 1rem;
-        padding: 0.8rem 1rem;
     }
     
-    .search-results {
-        margin-top: 0.25rem;
+    .search-input {
+        font-size: 1rem;
+        padding: 0.9rem 3rem 0.9rem 2.75rem;
+    }
+    
+    .search-input-icon {
+        left: 1rem;
+    }
+    
+    .search-clear {
+        right: 0.75rem;
+    }
+    
+    .shortcut-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .shortcut-item {
+        padding: 0.875rem 1rem;
     }
     
     .search-results__item {
-        padding: 0.8rem 1rem;
+        padding: 1.25rem;
+    }
+    
+    .search-results__item a {
+        font-size: 1rem;
+    }
+    
+    .suggestion-tags {
+        gap: 0.5rem;
+    }
+    
+    .suggestion-tag {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-main {
+        gap: 2rem;
+    }
+    
+    .search-header {
+        margin-bottom: 2rem;
+    }
+    
+    .search-title {
+        font-size: 1.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .search-input {
+        padding: 0.8rem 2.75rem 0.8rem 2.5rem;
     }
 }
 </style>
 
 <!-- 搜索脚本 -->
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-<script src="{{ get_url(path='js/fuse-search.js') }}"></script>
+<script src="{{ get_url(path='js/search.js') }}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 增强的搜索管理器
+    const EnhancedSearchManager = {
+        searchInput: null,
+        searchClear: null,
+        searchStats: null,
+        searchResults: null,
+        searchEmpty: null,
+        currentResults: [],
+        
+        init() {
+            this.setupElements();
+            this.setupEventListeners();
+            this.setupKeyboardShortcuts();
+            this.focusSearchInput();
+        },
+        
+        setupElements() {
+            this.searchInput = document.getElementById('search');
+            this.searchClear = document.getElementById('search-clear');
+            this.searchStats = document.getElementById('search-stats');
+            this.searchResults = document.getElementById('search-results');
+            this.searchEmpty = document.getElementById('search-empty');
+        },
+        
+        setupEventListeners() {
+            // 搜索输入监听
+            if (this.searchInput) {
+                this.searchInput.addEventListener('input', (e) => {
+                    this.handleSearch(e.target.value);
+                    this.toggleClearButton(e.target.value);
+                });
+                
+                this.searchInput.addEventListener('focus', () => {
+                    this.searchInput.parentElement.classList.add('focused');
+                });
+                
+                this.searchInput.addEventListener('blur', () => {
+                    this.searchInput.parentElement.classList.remove('focused');
+                });
+            }
+            
+            // 清除按钮
+            if (this.searchClear) {
+                this.searchClear.addEventListener('click', () => {
+                    this.clearSearch();
+                });
+            }
+            
+            // 快捷搜索按钮
+            document.querySelectorAll('.shortcut-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const query = item.dataset.query;
+                    this.searchInput.value = query;
+                    this.handleSearch(query);
+                    this.toggleClearButton(query);
+                });
+            });
+            
+            // 搜索建议标签
+            document.querySelectorAll('.suggestion-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const query = tag.dataset.query;
+                    this.searchInput.value = query;
+                    this.handleSearch(query);
+                    this.toggleClearButton(query);
+                });
+            });
+        },
+        
+        setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // 按 / 键聚焦搜索框
+                if (e.key === '/' && !e.ctrlKey && !e.metaKey && e.target !== this.searchInput) {
+                    e.preventDefault();
+                    this.searchInput.focus();
+                }
+                
+                // ESC 键清除搜索
+                if (e.key === 'Escape' && e.target === this.searchInput) {
+                    this.clearSearch();
+                }
+            });
+        },
+        
+        handleSearch(query) {
+            const trimmedQuery = query.trim();
+            
+            if (trimmedQuery.length === 0) {
+                this.hideResults();
+                return;
+            }
+            
+            if (trimmedQuery.length < 2) {
+                return; // 至少需要2个字符才开始搜索
+            }
+            
+            // 使用全局搜索函数（由 search.js 提供）
+            if (window.search && typeof window.search === 'function') {
+                const startTime = performance.now();
+                const results = window.search(trimmedQuery);
+                const endTime = performance.now();
+                const searchTime = Math.round(endTime - startTime);
+                
+                this.displayResults(results, trimmedQuery, searchTime);
+            }
+        },
+        
+        displayResults(results, query, searchTime) {
+            this.currentResults = results;
+            
+            if (results.length === 0) {
+                this.showEmpty();
+                return;
+            }
+            
+            // 更新统计信息
+            this.updateStats(results.length, searchTime);
+            
+            // 显示结果
+            this.showResults(results, query);
+        },
+        
+        updateStats(count, time) {
+            if (this.searchStats) {
+                const countText = `找到 ${count} 个结果`;
+                const timeText = `用时 ${time}ms`;
+                this.searchStats.querySelector('.search-count').textContent = countText;
+                this.searchStats.querySelector('.search-time').textContent = timeText;
+                this.searchStats.style.display = 'block';
+            }
+        },
+        
+        showResults(results, query) {
+            if (!this.searchResults) return;
+            
+            const resultsContainer = this.searchResults.querySelector('.search-results__items');
+            resultsContainer.innerHTML = '';
+            
+            // 显示前10个结果
+            const displayResults = results.slice(0, 10);
+            
+            displayResults.forEach(result => {
+                const item = this.createResultItem(result, query);
+                resultsContainer.appendChild(item);
+            });
+            
+            // 显示结果容器
+            this.searchResults.style.display = 'block';
+            this.searchEmpty.style.display = 'none';
+            
+            // 如果有更多结果，显示加载更多按钮
+            const footer = this.searchResults.querySelector('#search-results-footer');
+            if (results.length > 10) {
+                footer.style.display = 'block';
+                const loadMoreBtn = footer.querySelector('#load-more');
+                loadMoreBtn.onclick = () => this.loadMoreResults(query);
+            } else {
+                footer.style.display = 'none';
+            }
+        },
+        
+        createResultItem(result, query) {
+            const li = document.createElement('li');
+            li.className = 'search-results__item';
+            
+            // 高亮搜索词
+            const highlightedTitle = this.highlightText(result.title, query);
+            const highlightedContent = this.highlightText(result.body, query);
+            
+            li.innerHTML = `
+                <a href="${result.permalink}">${highlightedTitle}</a>
+                <div class="search-results__teaser">${highlightedContent}</div>
+                <div class="search-results__url">${result.permalink}</div>
+            `;
+            
+            return li;
+        },
+        
+        highlightText(text, query) {
+            if (!text || !query) return text;
+            
+            const words = query.toLowerCase().split(/\s+/).filter(word => word.length > 0);
+            let highlighted = text;
+            
+            words.forEach(word => {
+                const regex = new RegExp(`(${word})`, 'gi');
+                highlighted = highlighted.replace(regex, '<mark>$1</mark>');
+            });
+            
+            return highlighted;
+        },
+        
+        showEmpty() {
+            if (this.searchResults) this.searchResults.style.display = 'none';
+            if (this.searchStats) this.searchStats.style.display = 'none';
+            if (this.searchEmpty) this.searchEmpty.style.display = 'block';
+        },
+        
+        hideResults() {
+            if (this.searchResults) this.searchResults.style.display = 'none';
+            if (this.searchStats) this.searchStats.style.display = 'none';
+            if (this.searchEmpty) this.searchEmpty.style.display = 'none';
+        },
+        
+        toggleClearButton(value) {
+            if (this.searchClear) {
+                this.searchClear.style.display = value.length > 0 ? 'flex' : 'none';
+            }
+        },
+        
+        clearSearch() {
+            this.searchInput.value = '';
+            this.hideResults();
+            this.toggleClearButton('');
+            this.searchInput.focus();
+        },
+        
+        focusSearchInput() {
+            // 页面加载后自动聚焦搜索框
+            if (this.searchInput) {
+                setTimeout(() => {
+                    this.searchInput.focus();
+                }, 100);
+            }
+        },
+        
+        loadMoreResults(query) {
+            // 实现加载更多结果的逻辑
+            console.log('加载更多结果:', query);
+        }
+    };
+    
+    // 初始化增强搜索管理器
+    EnhancedSearchManager.init();
+});
+</script>
 {% endblock content %}
